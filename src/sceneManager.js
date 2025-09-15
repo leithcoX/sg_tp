@@ -6,7 +6,7 @@ export class SceneManager {
     constructor(scene) {
         this.scene = scene
         this.setupEnv()
-        this.setupBase()
+        this.setupCampBase()
         this.setupTerrain()
     }
 
@@ -43,16 +43,17 @@ export class SceneManager {
         this.scene.add(island)
     }
 
-    setupBase() {
+    setupCampBase() {
+        const campBase = new THREE.Group()
 
         const groundBase = new THREE.BoxGeometry(22, 2, 10)
         const groundMaterial = new THREE.MeshPhongMaterial({ color: 0xC0C0C0 })
         const ground = new THREE.Mesh(groundBase, groundMaterial)
-        this.scene.add(ground)
+        campBase.add(ground)
 
         const airstripGeometry = new THREE.BoxGeometry(30, 2, 6)
         const airstrip = new THREE.Mesh(airstripGeometry, groundMaterial)
-        this.scene.add(airstrip)
+        campBase.add(airstrip)
         airstrip.translateZ(8)
         airstrip.translateX(2)
 
@@ -73,11 +74,11 @@ export class SceneManager {
         camp.position.set(3.75, .9, -2)
         camp.rotateZ(Math.PI / 2)
         camp.rotateX(Math.PI / 2)
-        this.scene.add(camp)
+        campBase.add(camp)
 
         const CAMPS_AMMOUNT = 7
         for (let i = 1; i < CAMPS_AMMOUNT; i++) {
-            this.scene.add(camp.clone().translateZ(-2.2 * i))
+            campBase.add(camp.clone().translateZ(-2.2 * i))
         }
 
         const towerMaterial = new THREE.MeshPhongMaterial({ color: 0xC1BF76 })
@@ -85,7 +86,7 @@ export class SceneManager {
         const towerBody = new THREE.BoxGeometry(1, h, 1)
         const tower = new THREE.Mesh(towerBody, towerMaterial)
         tower.position.set(7, 1 + h / 2, -1)
-        this.scene.add(tower)
+        campBase.add(tower)
 
         const towerHeadGeometry = new THREE.ConeGeometry(1.1, 1.1, 4)
         const towerHead = new THREE.Mesh(towerHeadGeometry, towerMaterial)
@@ -97,9 +98,11 @@ export class SceneManager {
         const seaGeometry = new THREE.PlaneGeometry(seaSize,seaSize)
         const seaMaterial = new THREE.MeshPhongMaterial({color: 0x5689FF})
         const sea = new THREE.Mesh(seaGeometry, seaMaterial)
-        this.scene.add(sea)
+        campBase.add(sea)
         sea.rotateX(-Math.PI/2)
         sea.translateZ(-2)
+
+        this.scene.add(campBase)
     }
 
     setupCastle() {
