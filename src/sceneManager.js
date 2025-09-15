@@ -13,7 +13,7 @@ export class SceneManager {
     setupEnv() {
         this.scene.background = new THREE.Color(0xa8bbe6)
 
-        const hemisphereLight = new THREE.HemisphereLight(0xF0F0FF,0xFFFFFF, 1);
+        const hemisphereLight = new THREE.HemisphereLight(0xF0F0FF, 0xFFFFFF, 1);
         this.scene.add(hemisphereLight);
         this.scene.add(new THREE.HemisphereLightHelper(hemisphereLight))
 
@@ -28,6 +28,14 @@ export class SceneManager {
     }
 
     setupTerrain() {
+        const seaSize = 100
+        const seaGeometry = new THREE.PlaneGeometry(seaSize, seaSize)
+        const seaMaterial = new THREE.MeshPhongMaterial({ color: 0x5689FF })
+        const sea = new THREE.Mesh(seaGeometry, seaMaterial)
+        sea.rotateX(-Math.PI / 2)
+        sea.translateZ(-2)
+        this.scene.add(sea)
+
         const radius = 70;
         const widthSegments = 12;
         const heightSegments = 8;
@@ -43,8 +51,8 @@ export class SceneManager {
 
         const island = new THREE.Mesh(islandGeometry, greenMaterial)
         island.receiveShadow = true
-        island.position.set(2,1- radius, 4)
         this.scene.add(island)
+        island.position.set(2, 1 - radius, 4)
     }
 
     setupCampBase() {
@@ -97,14 +105,6 @@ export class SceneManager {
         towerHead.translateY(1)
         towerHead.rotateZ(Math.PI).rotateY(Math.PI / 4)
         tower.add(towerHead)
-
-        const seaSize = 100
-        const seaGeometry = new THREE.PlaneGeometry(seaSize,seaSize)
-        const seaMaterial = new THREE.MeshPhongMaterial({color: 0x5689FF})
-        const sea = new THREE.Mesh(seaGeometry, seaMaterial)
-        campBase.add(sea)
-        sea.rotateX(-Math.PI/2)
-        sea.translateZ(-2)
 
         campBase.traverse((obj) => {
             obj.castShadow = true
