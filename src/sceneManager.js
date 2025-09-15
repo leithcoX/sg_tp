@@ -13,15 +13,18 @@ export class SceneManager {
     setupEnv() {
         this.scene.background = new THREE.Color(0xa8bbe6)
 
-        const ambientLight = new THREE.AmbientLight(0xFFFFFF, .75);
-        this.scene.add(ambientLight);
+        const hemisphereLight = new THREE.HemisphereLight(0xF0F0FF,0xFFFFFF, 1);
+        this.scene.add(hemisphereLight);
+        this.scene.add(new THREE.HemisphereLightHelper(hemisphereLight))
 
         const intensity = 1;
         const light = new THREE.DirectionalLight(0xFFFFFF, intensity);
-        light.position.set(0, 10, 0);
-        light.target.position.set(5, 0, 0);
+        light.position.set(-25, 15, -10);
+        light.target.position.set(6, 0, 2);
+        light.castShadow = true
         this.scene.add(light);
         this.scene.add(light.target);
+        this.scene.add(new THREE.DirectionalLightHelper(light))
     }
 
     setupTerrain() {
@@ -39,6 +42,7 @@ export class SceneManager {
             thetaStart, thetaLength);
 
         const island = new THREE.Mesh(islandGeometry, greenMaterial)
+        island.receiveShadow = true
         island.position.set(2,1- radius, 4)
         this.scene.add(island)
     }
@@ -102,6 +106,10 @@ export class SceneManager {
         sea.rotateX(-Math.PI/2)
         sea.translateZ(-2)
 
+        campBase.traverse((obj) => {
+            obj.castShadow = true
+            obj.receiveShadow = true
+        })
         this.scene.add(campBase)
     }
 

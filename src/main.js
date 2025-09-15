@@ -9,6 +9,7 @@ function setupThreeJs() {
     container = document.getElementById("container3D");
 
     renderer = new THREE.WebGLRenderer();
+    renderer.shadowMap.enabled = true
     scene = new THREE.Scene();
 
     container.appendChild(renderer.domElement);
