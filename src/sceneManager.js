@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ElevationGeometry } from './elevationGeometry'
 
 const greenMaterial = new THREE.MeshPhongMaterial({ color: 0x00FF00 })
@@ -9,6 +10,7 @@ export class SceneManager {
         this.setupEnv()
         this.setupCampBase()
         this.loadTerrain()
+        this.loadShip()
     }
 
     setupEnv() {
@@ -63,7 +65,7 @@ export class SceneManager {
         const terrainGeometry = new ElevationGeometry(width, height, amplitude, widthSegments, heightSegments, this.texture);
         const island = new THREE.Mesh(terrainGeometry, greenMaterial)
         island.translateY(-1)
-        island.rotateY(Math.PI /2)
+        island.rotateY(Math.PI / 2)
         island.receiveShadow = true
         map.add(island)
         map.translateY(-3)
@@ -133,6 +135,30 @@ export class SceneManager {
         })
 
         this.scene.add(campBase)
+    }
+
+    loadShip() {
+        new GLTFLoader().load('/sg_tp/models/destructor.glb',
+            (model) => {
+                console.log("Cargado")
+                this.setupShip(model)
+            },
+            function(xhr) {
+                console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+            },
+            function(error) {
+                console.log('An error happened');
+                console.log(error);
+            })
+    }
+
+    setupShip(shipModel) {
+        console.log(shipModel)
+        this.ship = shipModel.scene
+        this.ship.position.set(0,-2.8,-40)
+        this.ship.scale.set(.15,.15,.15)
+        this.ship.add(new THREE.AxesHelper(10))
+        this.scene.add(this.ship)
     }
 
     animate() {
