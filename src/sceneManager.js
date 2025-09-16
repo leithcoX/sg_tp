@@ -46,7 +46,7 @@ export class SceneManager {
 
     setupTerrain() {
         const map = new THREE.Group()
-        const seaSize = 100
+        const seaSize = 150
         const seaGeometry = new THREE.CircleGeometry(seaSize)
         const seaMaterial = new THREE.MeshPhongMaterial({ color: 0x5689FF })
         const sea = new THREE.Mesh(seaGeometry, seaMaterial)
