@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
 import { ElevationGeometry } from './elevationGeometry'
 
 const greenMaterial = new THREE.MeshPhongMaterial({ color: 0x00FF00 })
@@ -11,6 +12,7 @@ export class SceneManager {
         this.setupCampBase()
         this.loadTerrain()
         this.loadShip()
+        // this.setupAirplane()
     }
 
     setupEnv() {
@@ -155,10 +157,64 @@ export class SceneManager {
     setupShip(shipModel) {
         console.log(shipModel)
         this.ship = shipModel.scene
-        this.ship.position.set(0,-2.8,-40)
-        this.ship.scale.set(.15,.15,.15)
-        this.ship.add(new THREE.AxesHelper(10))
+        this.ship.position.set(0, -2.8, -40)
+        this.ship.scale.set(.15, .15, .15)
         this.scene.add(this.ship)
+    }
+
+
+
+    setupAirplane() {
+        this.airplane = new THREE.Group()
+
+        const referencia = new THREE.Mesh(new THREE.BoxGeometry(3, 1, 2), greenMaterial)
+        referencia.position.set(-6.5, 1.5, 8)
+        this.scene.add(referencia)
+        const fuselaje = null;
+
+        //Create a closed wavey loop
+        const curve = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(-8, 2.5, 8),
+            new THREE.Vector3(-7, 2.5, 8),
+            new THREE.Vector3(-6, 2.5, 8),
+            new THREE.Vector3(-5, 2.5, 8),
+            new THREE.Vector3(-4, 2.5, 8)
+        ]);
+
+        const radiusCurve = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(0, 1.5, 3),
+            new THREE.Vector3(43.5, 7.9, 8),
+            new THREE.Vector3(85.95, 12.25, 12.25),
+            new THREE.Vector3(136.7, 12.25, 12.25),
+            new THREE.Vector3(148.75, 6.45, 12.25),
+            new THREE.Vector3(152, 2.35, 12.25),
+        ])
+        const lenght = 152//3
+
+        function airplaneGeometry(u, v, target) {
+            const theta = 2 * Math.PI * v;
+            const radius = radiusCurve.getPoint(u).y //* 3/152
+            const center = radiusCurve.getPoint(u).z
+            const x = Math.cos(theta) * radius
+            const y = Math.sin(theta) * radius - center
+            const z = u * lenght
+            target.set(x, y, z)
+        }
+
+        const airplaneGeo = new ParametricGeometry(airplaneGeometry, 10, 20)
+        const airplane = new THREE.Mesh(airplaneGeo, greenMaterial)
+        greenMaterial.side = THREE.DoubleSide
+        this.airplane.add(airplane)
+        airplane.position.set(-8, 3, 8)
+        airplane.rotateY(Math.PI * .5)
+        const points = curve.getPoints(50);
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+
+        const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
+
+        const curveObject = new THREE.Line(geometry, material);
+        this.scene.add(curveObject)
+        this.scene.add(this.airplane)
     }
 
     animate() {
