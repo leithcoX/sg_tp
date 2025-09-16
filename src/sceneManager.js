@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { ElevationGeometry } from './elevationGeometry'
 
 const greenMaterial = new THREE.MeshPhongMaterial({ color: 0x00FF00 })
 
@@ -7,7 +8,7 @@ export class SceneManager {
         this.scene = scene
         this.setupEnv()
         this.setupCampBase()
-        this.setupTerrain()
+        this.loadTerrain()
     }
 
     setupEnv() {
@@ -27,32 +28,44 @@ export class SceneManager {
         this.scene.add(new THREE.DirectionalLightHelper(light))
     }
 
+    loadTerrain() {
+        this.texture = new THREE.TextureLoader().load('/sg_tp/maps/isle.png',
+            (_) => {
+                this.setupTerrain();
+                console.log("Cargado")
+            },
+            function(xhr) {
+                console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+            },
+            function(error) {
+                console.log('An error happened');
+                console.log(error);
+            }
+        )
+    }
+
     setupTerrain() {
+        const map = new THREE.Group()
         const seaSize = 100
-        const seaGeometry = new THREE.PlaneGeometry(seaSize, seaSize)
+        const seaGeometry = new THREE.CircleGeometry(seaSize)
         const seaMaterial = new THREE.MeshPhongMaterial({ color: 0x5689FF })
         const sea = new THREE.Mesh(seaGeometry, seaMaterial)
         sea.rotateX(-Math.PI / 2)
-        sea.translateZ(-2)
-        this.scene.add(sea)
+        map.add(sea)
 
-        const radius = 70;
-        const widthSegments = 12;
-        const heightSegments = 8;
-        const phiStart = 0;
-        const phiLength = Math.PI * 2;
-        const thetaStart = 0;
-        const thetaLength = Math.PI * .1;
-        const islandGeometry = new THREE.SphereGeometry(
-            radius,
-            widthSegments, heightSegments,
-            phiStart, phiLength,
-            thetaStart, thetaLength);
+        const width = 120;
+        const height = 120;
+        const amplitude = 10;
+        const widthSegments = 100;
+        const heightSegments = 100;
 
-        const island = new THREE.Mesh(islandGeometry, greenMaterial)
-        island.receiveShadow = true
-        this.scene.add(island)
-        island.position.set(2, 1 - radius, 4)
+        const terrainGeometry = new ElevationGeometry(width, height, amplitude, widthSegments, heightSegments, this.texture);
+        const terrain = new THREE.Mesh(terrainGeometry, greenMaterial)
+        terrain.translateY(-1)
+        terrain.rotateY(Math.PI /2)
+        map.add(terrain)
+        map.translateY(-3)
+        this.scene.add(map)
     }
 
     setupCampBase() {
@@ -110,6 +123,9 @@ export class SceneManager {
             obj.castShadow = true
             obj.receiveShadow = true
         })
+
+        campBase.rotateY(Math.PI *1.55)
+        campBase.translateZ(25)
         this.scene.add(campBase)
     }
 
