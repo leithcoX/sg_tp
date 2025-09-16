@@ -16,7 +16,7 @@ export class SceneManager {
 
         const hemisphereLight = new THREE.HemisphereLight(0xF0F0FF, 0xFFFFFF, 1);
         this.scene.add(hemisphereLight);
-        this.scene.add(new THREE.HemisphereLightHelper(hemisphereLight))
+        // this.scene.add(new THREE.HemisphereLightHelper(hemisphereLight))
 
         const intensity = 1;
         const light = new THREE.DirectionalLight(0xFFFFFF, intensity);
@@ -25,7 +25,7 @@ export class SceneManager {
         light.castShadow = true
         this.scene.add(light);
         this.scene.add(light.target);
-        this.scene.add(new THREE.DirectionalLightHelper(light))
+        // this.scene.add(new THREE.DirectionalLightHelper(light))
     }
 
     loadTerrain() {
@@ -51,6 +51,7 @@ export class SceneManager {
         const seaMaterial = new THREE.MeshPhongMaterial({ color: 0x5689FF })
         const sea = new THREE.Mesh(seaGeometry, seaMaterial)
         sea.rotateX(-Math.PI / 2)
+        sea.receiveShadow = true
         map.add(sea)
 
         const width = 120;
@@ -60,11 +61,14 @@ export class SceneManager {
         const heightSegments = 100;
 
         const terrainGeometry = new ElevationGeometry(width, height, amplitude, widthSegments, heightSegments, this.texture);
-        const terrain = new THREE.Mesh(terrainGeometry, greenMaterial)
-        terrain.translateY(-1)
-        terrain.rotateY(Math.PI /2)
-        map.add(terrain)
+        const island = new THREE.Mesh(terrainGeometry, greenMaterial)
+        island.translateY(-1)
+        island.rotateY(Math.PI /2)
+        island.receiveShadow = true
+        map.add(island)
         map.translateY(-3)
+        map.translateZ(-20)
+        map.rotateY(Math.PI * -1.55)
         this.scene.add(map)
     }
 
@@ -119,13 +123,15 @@ export class SceneManager {
         towerHead.rotateZ(Math.PI).rotateY(Math.PI / 4)
         tower.add(towerHead)
 
+        // campBase.rotateY(Math.PI *1.55)
+        // campBase.translateZ(25)
+
+
         campBase.traverse((obj) => {
             obj.castShadow = true
             obj.receiveShadow = true
         })
 
-        campBase.rotateY(Math.PI *1.55)
-        campBase.translateZ(25)
         this.scene.add(campBase)
     }
 
