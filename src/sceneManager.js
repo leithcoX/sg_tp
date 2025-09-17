@@ -3,15 +3,19 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
 import { ElevationGeometry } from './elevationGeometry'
 
+function addAxes(obj, size=10) {
+    obj.add(new THREE.AxesHelper(size))
+}
+
 const greenMaterial = new THREE.MeshPhongMaterial({ color: 0x00FF00 })
 
 export class SceneManager {
     constructor(scene) {
         this.scene = scene
         this.setupEnv()
-        this.setupCampBase()
-        this.loadTerrain()
-        this.loadShip()
+        // this.setupCampBase()
+        // this.loadTerrain()
+        // this.loadShip()
         this.setupAirplane()
     }
 
@@ -203,37 +207,106 @@ export class SceneManager {
         this.airplane.add(fuselageWireframe);
 
         const engineCurve = new THREE.CubicBezierCurve(
-            new THREE.Vector2(1, 130),
-            new THREE.Vector2(7, 135),
-            new THREE.Vector2(10, 158),
-            new THREE.Vector2(0, 158)
+            new THREE.Vector2(1, -14),
+            new THREE.Vector2(7, -9),
+            new THREE.Vector2(10, 14),
+            new THREE.Vector2(0, 14)
         );
         const enginePoints = engineCurve.getPoints(50);
         const engineGeometry = new THREE.LatheGeometry(enginePoints)
-        const engine = new THREE.Mesh(engineGeometry, greenMaterial)
+        const engine = new THREE.Mesh(engineGeometry, airplaneMaterial)
 
-        engine.translateX(-130)
+        // engine.translateX(130)
         engine.rotateZ(Math.PI / 2)
-        engine.rotateX(Math.PI)
-        engine.add(new THREE.AxesHelper(10))
+        // engine.rotateX(Math.PI)
         this.airplane.add(engine)
-        engine.position.set(0, -12, -15.6 * 3)
+        // engine.position.set(0, 28, -15.6 * 3)
         const helixes = new THREE.Group()
-        const helixGeometry = new THREE.CylinderGeometry(2,1,4,4)
-        // const helixBufferGeometry = new THREE.mes
-        const helixMaterial = new THREE.MeshPhongMaterial({color:0xF0F0F0})
-        const helix = new THREE.Mesh(helixGeometry, greenMaterial)
+        const helixGeometry = new THREE.CylinderGeometry(2, 1, 4, 4)
+        const helixBufferGeometry = new THREE.BufferGeometry();
+
+        const ip = {b:.3, t:4.3}
+        const helixVertices = [
+          // front
+          { pos: [-.05, ip.b,  .5], norm: [ 0,  0,  1], uv: [0, 0], },
+          { pos: [ .05, ip.b,  .5], norm: [ 0,  0,  1], uv: [1, 0], },
+          { pos: [-.05,  ip.t,  .3], norm: [ 0,  0,  1], uv: [0, 1], },
+          { pos: [ .05,  ip.t,  .3], norm: [ 0,  0,  1], uv: [1, 1], },
+          // right
+          { pos: [ .05, ip.b,  .5], norm: [ 1,  0,  0], uv: [0, 0], },
+          { pos: [ .05, ip.b, -.5], norm: [ 1,  0,  0], uv: [1, 0], },
+          { pos: [ .05,  ip.t,  .3], norm: [ 1,  0,  0], uv: [0, 1], },
+          { pos: [ .05,  ip.t, -.3], norm: [ 1,  0,  0], uv: [1, 1], },
+          // back
+          { pos: [ .05, ip.b, -.5], norm: [ 0,  0, -1], uv: [0, 0], },
+          { pos: [-.05, ip.b, -.5], norm: [ 0,  0, -1], uv: [1, 0], },
+          { pos: [ .05,  ip.t, -.3], norm: [ 0,  0, -1], uv: [0, 1], },
+          { pos: [-.05,  ip.t, -.3], norm: [ 0,  0, -1], uv: [1, 1], },
+          // left
+          { pos: [-.05, ip.b, -.5], norm: [-1,  0,  0], uv: [0, 0], },
+          { pos: [-.05, ip.b,  .5], norm: [-1,  0,  0], uv: [1, 0], },
+          { pos: [-.05,  ip.t, -.3], norm: [-1,  0,  0], uv: [0, 1], },
+          { pos: [-.05,  ip.t,  .3], norm: [-1,  0,  0], uv: [1, 1], },
+          // top
+          { pos: [ .05,  ip.t, -.3], norm: [ 0,  1,  0], uv: [0, 0], },
+          { pos: [-.05,  ip.t, -.3], norm: [ 0,  1,  0], uv: [1, 0], },
+          { pos: [ .05,  ip.t,  .3], norm: [ 0,  1,  0], uv: [0, 1], },
+          { pos: [-.05,  ip.t,  .3], norm: [ 0,  1,  0], uv: [1, 1], },
+          // bottom.05
+          { pos: [ .05, ip.b,  .5], norm: [ 0, -1,  0], uv: [0, 0], },
+          { pos: [-.05, ip.b,  .5], norm: [ 0, -1,  0], uv: [1, 0], },
+          { pos: [ .05, ip.b, -.5], norm: [ 0, -1,  0], uv: [0, 1], },
+          { pos: [-.05, ip.b, -.5], norm: [ 0, -1,  0], uv: [1, 1], },
+        ];
+
+        const positions = [];
+        const normals = [];
+        const uvs = [];
+        for (const vertex of helixVertices) {
+          positions.push(...vertex.pos);
+          normals.push(...vertex.norm);
+          uvs.push(...vertex.uv);
+        }
+        helixBufferGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+        helixBufferGeometry.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(normals), 3));
+        helixBufferGeometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvs), 2));
+        helixBufferGeometry.setIndex([
+           0,  1,  2,   2,  1,  3,  // front
+           4,  5,  6,   6,  5,  7,  // right
+           8,  9, 10,  10,  9, 11,  // back
+          12, 13, 14,  14, 13, 15,  // left
+          16, 17, 18,  18, 17, 19,  // top
+          20, 21, 22,  22, 21, 23,  // bottom
+        ]);
+
+        const blackMaterial = new THREE.MeshPhongMaterial({color: 0x0})
+        const helixMaterial = new THREE.MeshPhongMaterial({ color: 0xF0F0F0 })
+        const helix = new THREE.Mesh(helixBufferGeometry, blackMaterial)
+        for(let i = 0; i < 3;i++) {
+            const helixClone = helix.clone()
+            helixClone.rotateY(.2)
+            helixes.add(helixClone)
+            helix.rotateX(Math.PI / 2)
+        }
+        helix.rotateY(.2)
         helixes.add(helix)
-        this.scene.add(helixes)
-        this.scene.add(engine)
 
+        const gearGeometry = new THREE.CylinderGeometry(.25,.25,.2)
+        const gear = new THREE.Mesh(gearGeometry, blackMaterial)
+        gear.rotateZ(Math.PI/2)
+        helixes.add(gear)
 
+        engine.add(helixes)
+        helixes.rotateZ(Math.PI /2)
+        helixes.translateX(-14.3)
+        helixes.scale.multiplyScalar(2)
+        engine.position.set(130,-13,36)
 
         const wheels = new THREE.Group()
         const wheelGeometry = new THREE.CylinderGeometry(2, 2, 1)
         const wheelMaterial = new THREE.MeshPhongMaterial({ color: 0x0 })
         const wheel = new THREE.Mesh(wheelGeometry, wheelMaterial)
-        wheel.position.set(-5,.75,0)
+        wheel.position.set(-5, .75, 0)
         const wheelClone = wheel.clone()
         wheelClone.translateY(-1.5)
 
@@ -246,16 +319,16 @@ export class SceneManager {
         wheels.add(wheel)
         wheels.add(wheelClone)
 
-        const barsMaterial = new THREE.MeshPhongMaterial({color:0xAAAAAA})
-        const horizontalBar = new THREE.Mesh(new THREE.BoxGeometry(11,.5,1.5), barsMaterial)
+        const barsMaterial = new THREE.MeshPhongMaterial({ color: 0xAAAAAA })
+        const horizontalBar = new THREE.Mesh(new THREE.BoxGeometry(11, .5, 1.5), barsMaterial)
         wheels.add(horizontalBar)
 
         const verticalBar = horizontalBar.clone()
-        verticalBar.rotateY(Math.PI/2).translateX(11/2)
+        verticalBar.rotateY(Math.PI / 2).translateX(11 / 2)
         wheels.add(verticalBar)
 
-        wheels.position.set(143,-38,-7)
-        wheels.rotateX(Math.PI/2)
+        wheels.position.set(143, -38, -7)
+        wheels.rotateX(Math.PI / 2)
         const wheelsClone = wheels.clone()
         wheelsClone.translateY(14)
         this.airplane.add(wheels)
