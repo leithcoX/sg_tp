@@ -167,13 +167,13 @@ export class SceneManager {
     setupAirplane() {
         this.airplane = new THREE.Group()
 
-        const airplaneMaterial = new THREE.MeshPhongMaterial({color:0xAAAAAA})
+        const airplaneMaterial = new THREE.MeshPhongMaterial({ color: 0xAAAAAA })
         const referencia = new THREE.Mesh(new THREE.BoxGeometry(3, 1, 2), greenMaterial)
         referencia.position.set(-6.5, 1.5, 8)
         this.scene.add(referencia)
 
 
-        let radiusCurve = new THREE.CatmullRomCurve3([
+        const fuselageCurve = new THREE.CatmullRomCurve3([
             new THREE.Vector3(0, 4, 2),
             new THREE.Vector3(55.6, 10, 10),
             new THREE.Vector3(110, 15.6, 15.6),
@@ -183,25 +183,24 @@ export class SceneManager {
         ])
         function buildFuselageGeometry(u, v, target) {
             const theta = 2 * Math.PI * v;
-            const center = radiusCurve.getPointAt(u)
-            const radius = radiusCurve.getPointAt(u).z //* 3/152
-            const x = -Math.cos(theta) * radius
-            const y = Math.sin(theta) * radius - center.y
-            const z = center.x
+
+            const curvepoint = fuselageCurve.getPointAt(u)
+            const radius = curvepoint.z
+
+            const x = curvepoint.x
+            const y = Math.sin(theta) * radius - curvepoint.y
+            const z = Math.cos(theta) * radius
             target.set(x, y, z)
         }
-
         const fuselageGeometry = new ParametricGeometry(buildFuselageGeometry, 15, 15)
         const fuselage = new THREE.Mesh(fuselageGeometry, airplaneMaterial)
-        fuselage.position.set(-8, 3, 8)
-        fuselage.rotateY(Math.PI * .5)
 
-        // const wireframe = new THREE.EdgesGeometry(fuselageGeometry)
-        // const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0 });
-        // const airplaneWireframe = new THREE.LineSegments(wireframe, lineMaterial);
-        // this.scene.add(airplaneWireframe);
+        const wireframe = new THREE.EdgesGeometry(fuselageGeometry)
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0 });
+        const fuselageWireframe = new THREE.LineSegments(wireframe, lineMaterial);
 
         this.airplane.add(fuselage)
+        this.airplane.add(fuselageWireframe);
 
         this.scene.add(this.airplane)
     }
