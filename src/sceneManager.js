@@ -368,7 +368,7 @@ export class SceneManager {
             backWings.add(verticalBackWing)
             backWings.add(backWing)
             backWings.add(backWingClone)
-            this.scene.add(backWings)
+            this.airplane.add(backWings)
             backWings.position.set(6.5, -1.8, 0)
         }
 
