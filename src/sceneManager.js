@@ -11,7 +11,7 @@ export class SceneManager {
         this.setupEnv()
         // this.setupCampBase()
         // this.loadTerrain()
-        this.loadShip()
+        // this.loadShip()
         this.setupAirplane()
     }
 
@@ -170,7 +170,7 @@ export class SceneManager {
         const airplaneMaterial = new THREE.MeshPhongMaterial({ color: 0xAAAAAA })
         const referencia = new THREE.Mesh(new THREE.BoxGeometry(3, 1, 2), greenMaterial)
         referencia.position.set(-6.5, 1.5, 8)
-        this.scene.add(referencia)
+        // this.scene.add(referencia)
 
 
         const fuselageCurve = new THREE.CatmullRomCurve3([
@@ -201,6 +201,23 @@ export class SceneManager {
 
         this.airplane.add(fuselage)
         this.airplane.add(fuselageWireframe);
+
+        const engineCurve = new THREE.CubicBezierCurve(
+            new THREE.Vector2(1, 130),
+            new THREE.Vector2(7, 135),
+            new THREE.Vector2(10, 158),
+            new THREE.Vector2(0, 158)
+        );
+        const enginePoints = engineCurve.getPoints(50);
+        const engineGeometry = new THREE.LatheGeometry(enginePoints)
+        const engine = new THREE.Mesh(engineGeometry, greenMaterial)
+
+        // engine.translateX(130)
+        engine.rotateZ(Math.PI / 2)
+        engine.rotateX(Math.PI)
+        engine.add(new THREE.AxesHelper(10))
+        engine.position.set(0,-12,-15.6*3)
+        this.airplane.add(engine)
 
         this.scene.add(this.airplane)
     }
