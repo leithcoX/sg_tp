@@ -167,7 +167,7 @@ export class SceneManager {
     setupAirplane() {
         this.airplane = new THREE.Group()
 
-        const airplaneMaterial = new THREE.MeshPhongMaterial({ color: 0xAAAAAA })
+        const airplaneMaterial = new THREE.MeshPhongMaterial({ color: 0x536379 })
         const referencia = new THREE.Mesh(new THREE.BoxGeometry(3, 1, 2), greenMaterial)
         referencia.position.set(-6.5, 1.5, 8)
         // this.scene.add(referencia)
@@ -192,7 +192,7 @@ export class SceneManager {
             const z = Math.cos(theta) * radius
             target.set(x, y, z)
         }
-        const fuselageGeometry = new ParametricGeometry(buildFuselageGeometry, 15, 15)
+        const fuselageGeometry = new ParametricGeometry(buildFuselageGeometry, 20, 20)
         const fuselage = new THREE.Mesh(fuselageGeometry, airplaneMaterial)
 
         const wireframe = new THREE.EdgesGeometry(fuselageGeometry)
@@ -216,8 +216,40 @@ export class SceneManager {
         engine.rotateZ(Math.PI / 2)
         engine.rotateX(Math.PI)
         engine.add(new THREE.AxesHelper(10))
-        engine.position.set(0,-12,-15.6*3)
+        engine.position.set(0, -12, -15.6 * 3)
         this.airplane.add(engine)
+
+        const wheels = new THREE.Group()
+        const wheelGeometry = new THREE.CylinderGeometry(2, 2, 1)
+        const wheelMaterial = new THREE.MeshPhongMaterial({ color: 0x0 })
+        const wheel = new THREE.Mesh(wheelGeometry, wheelMaterial)
+        wheel.position.set(-5,.75,0)
+        const wheelClone = wheel.clone()
+        wheelClone.translateY(-1.5)
+
+        for (let i = 0; i < 2; i++) {
+            wheels.add(wheelClone.clone())
+            wheels.add(wheel.clone())
+            wheel.translateX(5)
+            wheelClone.translateX(5)
+        }
+        wheels.add(wheel)
+        wheels.add(wheelClone)
+
+        const barsMaterial = new THREE.MeshPhongMaterial({color:0xAAAAAA})
+        const horizontalBar = new THREE.Mesh(new THREE.BoxGeometry(11,.5,1.5), barsMaterial)
+        wheels.add(horizontalBar)
+
+        const verticalBar = horizontalBar.clone()
+        verticalBar.rotateY(Math.PI/2).translateX(11/2)
+        wheels.add(verticalBar)
+
+        wheels.position.set(143,-38,-7)
+        wheels.rotateX(Math.PI/2)
+        const wheelsClone = wheels.clone()
+        wheelsClone.translateY(14)
+        this.airplane.add(wheels)
+        this.airplane.add(wheelsClone)
 
         this.scene.add(this.airplane)
     }
