@@ -176,6 +176,7 @@ export class SceneManager {
         referencia.position.set(-6.5, 1.5, 8)
         // this.scene.add(referencia)
 
+        /* FUSELAGE */
 
         const fuselageCurve = new THREE.CatmullRomCurve3([
             new THREE.Vector3(0, 4, 2),
@@ -206,25 +207,11 @@ export class SceneManager {
         this.airplane.add(fuselage)
         this.airplane.add(fuselageWireframe);
 
-        const engineCurve = new THREE.CubicBezierCurve(
-            new THREE.Vector2(1, -14),
-            new THREE.Vector2(7, -9),
-            new THREE.Vector2(10, 14),
-            new THREE.Vector2(0, 14)
-        );
-        const enginePoints = engineCurve.getPoints(50);
-        const engineGeometry = new THREE.LatheGeometry(enginePoints)
-        const engine = new THREE.Mesh(engineGeometry, airplaneMaterial)
+        /* HELIXES */
 
-        // engine.translateX(130)
-        engine.rotateZ(Math.PI / 2)
-        // engine.rotateX(Math.PI)
-        this.airplane.add(engine)
-        // engine.position.set(0, 28, -15.6 * 3)
         const helixes = new THREE.Group()
         const helixGeometry = new THREE.CylinderGeometry(2, 1, 4, 4)
         const helixBufferGeometry = new THREE.BufferGeometry();
-
         const ip = {b:.3, t:4.3}
         const helixVertices = [
           // front
@@ -296,11 +283,28 @@ export class SceneManager {
         gear.rotateZ(Math.PI/2)
         helixes.add(gear)
 
-        engine.add(helixes)
         helixes.rotateZ(Math.PI /2)
         helixes.translateX(-14.3)
         helixes.scale.multiplyScalar(2)
+
+        /* ENGINE */
+
+        const engineCurve = new THREE.CubicBezierCurve(
+            new THREE.Vector2(1, -14),
+            new THREE.Vector2(7, -9),
+            new THREE.Vector2(10, 14),
+            new THREE.Vector2(0, 14)
+        );
+        const enginePoints = engineCurve.getPoints(50);
+        const engineGeometry = new THREE.LatheGeometry(enginePoints)
+        const engine = new THREE.Mesh(engineGeometry, airplaneMaterial)
+
+        engine.rotateZ(Math.PI / 2)
+        this.airplane.add(engine)
         engine.position.set(130,-13,36)
+        engine.add(helixes)
+
+        /* WHEELS */
 
         const wheels = new THREE.Group()
         const wheelGeometry = new THREE.CylinderGeometry(2, 2, 1)
