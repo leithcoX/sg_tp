@@ -3,7 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
 import { ElevationGeometry } from './elevationGeometry'
 
-function addAxes(obj, size=10) {
+function addAxes(obj, size = 10) {
     obj.add(new THREE.AxesHelper(size))
 }
 
@@ -212,64 +212,64 @@ export class SceneManager {
         const helixes = new THREE.Group()
         const helixGeometry = new THREE.CylinderGeometry(2, 1, 4, 4)
         const helixBufferGeometry = new THREE.BufferGeometry();
-        const ip = {b:.3, t:4.3}
+        const ip = { b: .3, t: 4.3 }
         const helixVertices = [
-          // front
-          { pos: [-.05, ip.b,  .5], norm: [ 0,  0,  1], uv: [0, 0], },
-          { pos: [ .05, ip.b,  .5], norm: [ 0,  0,  1], uv: [1, 0], },
-          { pos: [-.05,  ip.t,  .3], norm: [ 0,  0,  1], uv: [0, 1], },
-          { pos: [ .05,  ip.t,  .3], norm: [ 0,  0,  1], uv: [1, 1], },
-          // right
-          { pos: [ .05, ip.b,  .5], norm: [ 1,  0,  0], uv: [0, 0], },
-          { pos: [ .05, ip.b, -.5], norm: [ 1,  0,  0], uv: [1, 0], },
-          { pos: [ .05,  ip.t,  .3], norm: [ 1,  0,  0], uv: [0, 1], },
-          { pos: [ .05,  ip.t, -.3], norm: [ 1,  0,  0], uv: [1, 1], },
-          // back
-          { pos: [ .05, ip.b, -.5], norm: [ 0,  0, -1], uv: [0, 0], },
-          { pos: [-.05, ip.b, -.5], norm: [ 0,  0, -1], uv: [1, 0], },
-          { pos: [ .05,  ip.t, -.3], norm: [ 0,  0, -1], uv: [0, 1], },
-          { pos: [-.05,  ip.t, -.3], norm: [ 0,  0, -1], uv: [1, 1], },
-          // left
-          { pos: [-.05, ip.b, -.5], norm: [-1,  0,  0], uv: [0, 0], },
-          { pos: [-.05, ip.b,  .5], norm: [-1,  0,  0], uv: [1, 0], },
-          { pos: [-.05,  ip.t, -.3], norm: [-1,  0,  0], uv: [0, 1], },
-          { pos: [-.05,  ip.t,  .3], norm: [-1,  0,  0], uv: [1, 1], },
-          // top
-          { pos: [ .05,  ip.t, -.3], norm: [ 0,  1,  0], uv: [0, 0], },
-          { pos: [-.05,  ip.t, -.3], norm: [ 0,  1,  0], uv: [1, 0], },
-          { pos: [ .05,  ip.t,  .3], norm: [ 0,  1,  0], uv: [0, 1], },
-          { pos: [-.05,  ip.t,  .3], norm: [ 0,  1,  0], uv: [1, 1], },
-          // bottom.05
-          { pos: [ .05, ip.b,  .5], norm: [ 0, -1,  0], uv: [0, 0], },
-          { pos: [-.05, ip.b,  .5], norm: [ 0, -1,  0], uv: [1, 0], },
-          { pos: [ .05, ip.b, -.5], norm: [ 0, -1,  0], uv: [0, 1], },
-          { pos: [-.05, ip.b, -.5], norm: [ 0, -1,  0], uv: [1, 1], },
+            // front
+            { pos: [-.05, ip.b, .5], norm: [0, 0, 1], uv: [0, 0], },
+            { pos: [.05, ip.b, .5], norm: [0, 0, 1], uv: [1, 0], },
+            { pos: [-.05, ip.t, .3], norm: [0, 0, 1], uv: [0, 1], },
+            { pos: [.05, ip.t, .3], norm: [0, 0, 1], uv: [1, 1], },
+            // right
+            { pos: [.05, ip.b, .5], norm: [1, 0, 0], uv: [0, 0], },
+            { pos: [.05, ip.b, -.5], norm: [1, 0, 0], uv: [1, 0], },
+            { pos: [.05, ip.t, .3], norm: [1, 0, 0], uv: [0, 1], },
+            { pos: [.05, ip.t, -.3], norm: [1, 0, 0], uv: [1, 1], },
+            // back
+            { pos: [.05, ip.b, -.5], norm: [0, 0, -1], uv: [0, 0], },
+            { pos: [-.05, ip.b, -.5], norm: [0, 0, -1], uv: [1, 0], },
+            { pos: [.05, ip.t, -.3], norm: [0, 0, -1], uv: [0, 1], },
+            { pos: [-.05, ip.t, -.3], norm: [0, 0, -1], uv: [1, 1], },
+            // left
+            { pos: [-.05, ip.b, -.5], norm: [-1, 0, 0], uv: [0, 0], },
+            { pos: [-.05, ip.b, .5], norm: [-1, 0, 0], uv: [1, 0], },
+            { pos: [-.05, ip.t, -.3], norm: [-1, 0, 0], uv: [0, 1], },
+            { pos: [-.05, ip.t, .3], norm: [-1, 0, 0], uv: [1, 1], },
+            // top
+            { pos: [.05, ip.t, -.3], norm: [0, 1, 0], uv: [0, 0], },
+            { pos: [-.05, ip.t, -.3], norm: [0, 1, 0], uv: [1, 0], },
+            { pos: [.05, ip.t, .3], norm: [0, 1, 0], uv: [0, 1], },
+            { pos: [-.05, ip.t, .3], norm: [0, 1, 0], uv: [1, 1], },
+            // bottom.05
+            { pos: [.05, ip.b, .5], norm: [0, -1, 0], uv: [0, 0], },
+            { pos: [-.05, ip.b, .5], norm: [0, -1, 0], uv: [1, 0], },
+            { pos: [.05, ip.b, -.5], norm: [0, -1, 0], uv: [0, 1], },
+            { pos: [-.05, ip.b, -.5], norm: [0, -1, 0], uv: [1, 1], },
         ];
 
         const positions = [];
         const normals = [];
         const uvs = [];
         for (const vertex of helixVertices) {
-          positions.push(...vertex.pos);
-          normals.push(...vertex.norm);
-          uvs.push(...vertex.uv);
+            positions.push(...vertex.pos);
+            normals.push(...vertex.norm);
+            uvs.push(...vertex.uv);
         }
         helixBufferGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
         helixBufferGeometry.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(normals), 3));
         helixBufferGeometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvs), 2));
         helixBufferGeometry.setIndex([
-           0,  1,  2,   2,  1,  3,  // front
-           4,  5,  6,   6,  5,  7,  // right
-           8,  9, 10,  10,  9, 11,  // back
-          12, 13, 14,  14, 13, 15,  // left
-          16, 17, 18,  18, 17, 19,  // top
-          20, 21, 22,  22, 21, 23,  // bottom
+            0, 1, 2, 2, 1, 3,  // front
+            4, 5, 6, 6, 5, 7,  // right
+            8, 9, 10, 10, 9, 11,  // back
+            12, 13, 14, 14, 13, 15,  // left
+            16, 17, 18, 18, 17, 19,  // top
+            20, 21, 22, 22, 21, 23,  // bottom
         ]);
 
-        const blackMaterial = new THREE.MeshPhongMaterial({color: 0x0})
+        const blackMaterial = new THREE.MeshPhongMaterial({ color: 0x0 })
         const helixMaterial = new THREE.MeshPhongMaterial({ color: 0xF0F0F0 })
         const helix = new THREE.Mesh(helixBufferGeometry, blackMaterial)
-        for(let i = 0; i < 3;i++) {
+        for (let i = 0; i < 3; i++) {
             const helixClone = helix.clone()
             helixClone.rotateY(.2)
             helixes.add(helixClone)
@@ -278,12 +278,12 @@ export class SceneManager {
         helix.rotateY(.2)
         helixes.add(helix)
 
-        const gearGeometry = new THREE.CylinderGeometry(.25,.25,.2)
+        const gearGeometry = new THREE.CylinderGeometry(.25, .25, .2)
         const gear = new THREE.Mesh(gearGeometry, blackMaterial)
-        gear.rotateZ(Math.PI/2)
+        gear.rotateZ(Math.PI / 2)
         helixes.add(gear)
 
-        helixes.rotateZ(Math.PI /2)
+        helixes.rotateZ(Math.PI / 2)
         helixes.translateX(-14.3)
         helixes.scale.multiplyScalar(2)
 
@@ -301,7 +301,7 @@ export class SceneManager {
 
         engine.rotateZ(Math.PI / 2)
         this.airplane.add(engine)
-        engine.position.set(130,-13,36)
+        engine.position.set(130, -13, 36)
         engine.add(helixes)
 
         /* WHEELS */
@@ -338,9 +338,10 @@ export class SceneManager {
         this.airplane.add(wheels)
         this.airplane.add(wheelsClone)
 
-        this.scene.add(this.airplane)
 
-        this.airplane.position.set(0,40,0)
+
+        // this.scene.add(this.airplane)
+        this.airplane.position.set(0, 40, 0)
     }
 
     animate() {
