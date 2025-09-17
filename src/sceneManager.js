@@ -204,6 +204,17 @@ export class SceneManager {
         const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0 });
         const fuselageWireframe = new THREE.LineSegments(wireframe, lineMaterial);
 
+
+        const fuselageCapGeometry = new THREE.CircleGeometry(2)
+        const fuselageCap = new THREE.Mesh(fuselageCapGeometry, airplaneMaterial)
+        fuselageCap.rotateY(-Math.PI /2).translateY(-4)
+        this.airplane.add(fuselageCap)
+
+        const fuselageNoseCapGeometry = new THREE.CircleGeometry(3)
+        const fuselageNoseCap = new THREE.Mesh(fuselageNoseCapGeometry, airplaneMaterial)
+        fuselageNoseCap.rotateY(Math.PI /2).translateY(-15).translateZ(195)
+        this.airplane.add(fuselageNoseCap)
+
         this.airplane.add(fuselage)
         this.airplane.add(fuselageWireframe);
 
