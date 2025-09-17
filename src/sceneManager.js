@@ -317,41 +317,61 @@ export class SceneManager {
             new THREE.Vector2(-10, -1),
             new THREE.Vector2(-10, 0),
         )
-        
+
         const wingAnglePoints = 20
         const wingPoints = wingTopCurve.getPoints(wingAnglePoints).concat(wingBottomCurve.getPoints(wingAnglePoints))
 
         const wingShape = new THREE.Shape(wingPoints)
         const wingCapGeometry = new THREE.ShapeGeometry(wingShape)
         const wingCap = new THREE.Mesh(wingCapGeometry, airplaneMaterial)
-        wingCap.scale.set(1,1,-1).multiplyScalar(.8)
-        wingCap.position.set(-5,0,-70)
-        addAxes(wingCap)
+        wingCap.scale.set(1, 1, -1).multiplyScalar(.8)
+        wingCap.position.set(-5, 0, -70)
         this.scene.add(wingCap)
 
 
-        function buildFirstHalfWingGeometry(u,v,target) {
-            u*=2
-            const curvePoint = u <= 1 ? wingTopCurve.getPointAt(u) : wingBottomCurve.getPointAt(u-1)  
-            const factor = .8 + (1-v)*.5
-            target.set(curvePoint.x * (factor)-v*5, curvePoint.y *(factor), -v*67-3)
+        function buildFirstHalfWingGeometry(u, v, target) {
+            u *= 2
+            const curvePoint = u <= 1 ? wingTopCurve.getPointAt(u) : wingBottomCurve.getPointAt(u - 1)
+            const factor = .8 + (1 - v) * .5
+            target.set(curvePoint.x * (factor) - v * 5, curvePoint.y * (factor), -v * 67 - 3)
         }
-        function buildSecondHalfWingGeometry(u,v,target) {
-            u*=2
-            const curvePoint = u <= 1 ? wingTopCurve.getPointAt(u) : wingBottomCurve.getPointAt(u-1)  
+        function buildSecondHalfWingGeometry(u, v, target) {
+            u *= 2
+            const curvePoint = u <= 1 ? wingTopCurve.getPointAt(u) : wingBottomCurve.getPointAt(u - 1)
             const factor = 1.3
-            target.set(curvePoint.x * (factor), curvePoint.y *(factor), 3-v*6)
+            target.set(curvePoint.x * (factor), curvePoint.y * (factor), 3 - v * 6)
         }
 
 
-        const wingFirstHalfGeometry = new ParametricGeometry(buildFirstHalfWingGeometry, wingAnglePoints*2,2)
-        const wingSecondHalfGeometry = new ParametricGeometry(buildSecondHalfWingGeometry, wingAnglePoints*2,2)
+        const wingFirstHalfGeometry = new ParametricGeometry(buildFirstHalfWingGeometry, wingAnglePoints * 2, 2)
+        const wingSecondHalfGeometry = new ParametricGeometry(buildSecondHalfWingGeometry, wingAnglePoints * 2, 2)
 
-        const wing= new THREE.Mesh(wingFirstHalfGeometry, airplaneMaterial)
+        const wing = new THREE.Mesh(wingFirstHalfGeometry, airplaneMaterial)
         const wingBody = new THREE.Mesh(wingSecondHalfGeometry, airplaneMaterial)
 
         wing.add(wingBody)
         wing.add(wingCap)
+
+        /* BACK_WINGS */
+        {
+            const backWings = new THREE.Group()
+
+            const backWing = wing.clone()
+            backWing.scale.set(1.5, 1, 1).multiplyScalar(.3)
+            backWing.position.set(0, 0, 0)
+            const backWingClone = backWing.clone()
+            backWingClone.scale.set(1.5, 1, -1).multiplyScalar(.3)
+
+            const verticalBackWing = wing.clone()
+            verticalBackWing.rotateX(Math.PI / 2)
+            verticalBackWing.scale.set(.5, .5, .2)
+            backWings.add(verticalBackWing)
+            backWings.add(backWing)
+            backWings.add(backWingClone)
+            this.scene.add(backWings)
+            backWings.position.set(6.5, -1.8, 0)
+        }
+
         wing.add(engine)
 
         const wireframe2 = new THREE.EdgesGeometry(wingFirstHalfGeometry)
@@ -363,18 +383,18 @@ export class SceneManager {
         this.airplane.add(wing)
         wing.add(wingWireframe)
         wing.add(wingWireframe3)
-        wing.position.set(130,-6,-12.25)
+        wing.position.set(130, -6, -12.25)
 
         const wingClone = wing.clone()
-        wingClone.scale.set(1,1,-1)
-        wingClone.translateZ(12.25*2)
+        wingClone.scale.set(1, 1, -1)
+        wingClone.translateZ(12.25 * 2)
         this.airplane.add(wingClone)
         // wingWireframe.position.set(130,-6,-15.25)
 
 
         const wingData = new THREE.LineCurve3(
-            new THREE.Vector3(0,0,3),
-            new THREE.Vector3(0,0,70)
+            new THREE.Vector3(0, 0, 3),
+            new THREE.Vector3(0, 0, 70)
         )
         const helperCurve1 = new THREE.Line(new THREE.BufferGeometry().setFromPoints(wingTopCurve.getPoints(100)), lineMaterial)
         const helperCurve2 = new THREE.Line(new THREE.BufferGeometry().setFromPoints(wingBottomCurve.getPoints(100)), lineMaterial)
@@ -382,6 +402,8 @@ export class SceneManager {
         // this.scene.add(helperCurve1)
         // this.scene.add(helperCurve2)
         // this.scene.add(helperCurve3)
+
+
 
         /* WHEELS */
 
