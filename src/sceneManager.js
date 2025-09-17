@@ -2,21 +2,25 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
 import { ElevationGeometry } from './elevationGeometry'
+import { AirplaneController } from './airplaneController';
 
-function addAxes(obj, size = 10) {
+function addAxes(obj, size = 50) {
     obj.add(new THREE.AxesHelper(size))
 }
 
 const greenMaterial = new THREE.MeshPhongMaterial({ color: 0x00FF00 })
 
 export class SceneManager {
+    showWireFrames = false;
     constructor(scene) {
         this.scene = scene
         this.setupEnv()
-        // this.setupCampBase()
-        // this.loadTerrain()
-        // this.loadShip()
+        this.setupCampBase()
+        this.loadTerrain()
+        this.loadShip()
         this.setupAirplane()
+        this.airPlaneController = new AirplaneController(this.airplaneCoordSystem)
+
     }
 
     setupEnv() {
@@ -200,23 +204,19 @@ export class SceneManager {
         const fuselageGeometry = new ParametricGeometry(buildFuselageGeometry, 20, 20)
         const fuselage = new THREE.Mesh(fuselageGeometry, airplaneMaterial)
 
-        const wireframe = new THREE.EdgesGeometry(fuselageGeometry)
-        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0 });
-        const fuselageWireframe = new THREE.LineSegments(wireframe, lineMaterial);
 
 
         const fuselageCapGeometry = new THREE.CircleGeometry(2)
         const fuselageCap = new THREE.Mesh(fuselageCapGeometry, airplaneMaterial)
-        fuselageCap.rotateY(-Math.PI /2).translateY(-4)
+        fuselageCap.rotateY(-Math.PI / 2).translateY(-4)
         this.airplane.add(fuselageCap)
 
         const fuselageNoseCapGeometry = new THREE.CircleGeometry(3)
         const fuselageNoseCap = new THREE.Mesh(fuselageNoseCapGeometry, airplaneMaterial)
-        fuselageNoseCap.rotateY(Math.PI /2).translateY(-15).translateZ(195)
+        fuselageNoseCap.rotateY(Math.PI / 2).translateY(-15).translateZ(195)
         this.airplane.add(fuselageNoseCap)
 
         this.airplane.add(fuselage)
-        this.airplane.add(fuselageWireframe);
 
         /* HELIXES */
 
@@ -385,15 +385,7 @@ export class SceneManager {
 
         wing.add(engine)
 
-        const wireframe2 = new THREE.EdgesGeometry(wingFirstHalfGeometry)
-        const wingWireframe = new THREE.LineSegments(wireframe2, lineMaterial);
-        //
-        const wireframe3 = new THREE.EdgesGeometry(wingSecondHalfGeometry)
-        const wingWireframe3 = new THREE.LineSegments(wireframe3, lineMaterial);
-
         this.airplane.add(wing)
-        wing.add(wingWireframe)
-        wing.add(wingWireframe3)
         wing.position.set(130, -6, -12.25)
 
         const wingClone = wing.clone()
@@ -403,13 +395,13 @@ export class SceneManager {
         // wingWireframe.position.set(130,-6,-15.25)
 
 
-        const wingData = new THREE.LineCurve3(
-            new THREE.Vector3(0, 0, 3),
-            new THREE.Vector3(0, 0, 70)
-        )
-        const helperCurve1 = new THREE.Line(new THREE.BufferGeometry().setFromPoints(wingTopCurve.getPoints(100)), lineMaterial)
-        const helperCurve2 = new THREE.Line(new THREE.BufferGeometry().setFromPoints(wingBottomCurve.getPoints(100)), lineMaterial)
-        const helperCurve3 = new THREE.Line(new THREE.BufferGeometry().setFromPoints(wingData.getPoints(100)), lineMaterial)
+        // const wingData = new THREE.LineCurve3(
+        //     new THREE.Vector3(0, 0, 3),
+        //     new THREE.Vector3(0, 0, 70)
+        // )
+        // const helperCurve1 = new THREE.Line(new THREE.BufferGeometry().setFromPoints(wingTopCurve.getPoints(100)), lineMaterial)
+        // const helperCurve2 = new THREE.Line(new THREE.BufferGeometry().setFromPoints(wingBottomCurve.getPoints(100)), lineMaterial)
+        // const helperCurve3 = new THREE.Line(new THREE.BufferGeometry().setFromPoints(wingData.getPoints(100)), lineMaterial)
         // this.scene.add(helperCurve1)
         // this.scene.add(helperCurve2)
         // this.scene.add(helperCurve3)
@@ -451,11 +443,27 @@ export class SceneManager {
         this.airplane.add(wheelsClone)
 
 
+        if (this.showWireFrames) {
 
-        this.scene.add(this.airplane)
-        // this.airplane.position.set(0, 40, 0)
+            const wireframe = new THREE.EdgesGeometry(fuselageGeometry)
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0 });
+            const fuselageWireframe = new THREE.LineSegments(wireframe, lineMaterial);
+            this.airplane.add(fuselageWireframe);
+
+        }
+
+        this.airplaneCoordSystem = new THREE.Group()
+        this.airplaneCoordSystem.add(this.airplane)
+        this.airplane.rotateY(Math.PI / 2).translateX(-95 * .015)
+        // this.airplane.scale.multiplyScalar(.015)
+
+        this.airplaneCoordSystem.position.set(0, 5, 0)
+        this.airplaneCoordSystem.rotateY(-Math.PI / 2)
+        this.scene.add(this.airplaneCoordSystem)
+        this.airplane.position.set(8, 0, 12.5)
     }
 
     animate() {
+        this.airPlaneController.update(.01)
     }
 }
