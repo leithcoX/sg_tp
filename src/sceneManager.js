@@ -9,9 +9,9 @@ export class SceneManager {
     constructor(scene) {
         this.scene = scene
         this.setupEnv()
-        // this.setupCampBase()
-        // this.loadTerrain()
-        // this.loadShip()
+        this.setupCampBase()
+        this.loadTerrain()
+        this.loadShip()
         this.setupAirplane()
     }
 
@@ -212,12 +212,22 @@ export class SceneManager {
         const engineGeometry = new THREE.LatheGeometry(enginePoints)
         const engine = new THREE.Mesh(engineGeometry, greenMaterial)
 
-        // engine.translateX(130)
+        engine.translateX(-130)
         engine.rotateZ(Math.PI / 2)
         engine.rotateX(Math.PI)
         engine.add(new THREE.AxesHelper(10))
-        engine.position.set(0, -12, -15.6 * 3)
         this.airplane.add(engine)
+        engine.position.set(0, -12, -15.6 * 3)
+        const helixes = new THREE.Group()
+        const helixGeometry = new THREE.CylinderGeometry(2,1,4,4)
+        // const helixBufferGeometry = new THREE.mes
+        const helixMaterial = new THREE.MeshPhongMaterial({color:0xF0F0F0})
+        const helix = new THREE.Mesh(helixGeometry, greenMaterial)
+        helixes.add(helix)
+        this.scene.add(helixes)
+        this.scene.add(engine)
+
+
 
         const wheels = new THREE.Group()
         const wheelGeometry = new THREE.CylinderGeometry(2, 2, 1)
@@ -252,6 +262,8 @@ export class SceneManager {
         this.airplane.add(wheelsClone)
 
         this.scene.add(this.airplane)
+
+        this.airplane.position.set(0,40,0)
     }
 
     animate() {
