@@ -51,7 +51,7 @@ export class AirplaneController {
     ctrlVRange = 25,
 
     // *** NUEVO: altura mínima (nivel de suelo) ***
-    minY = 2.2,
+    minY = 0,
 
     // *** NUEVO: gravedad simplificada (u/s^2) ***
     gravity = 9.81,

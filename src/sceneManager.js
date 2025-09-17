@@ -19,7 +19,45 @@ export class SceneManager {
         this.loadTerrain()
         this.loadShip()
         this.setupAirplane()
-        this.airPlaneController = new AirplaneController(this.airplaneCoordSystem)
+        this.airPlaneController = new AirplaneController(this.airplaneCoordSystem,
+            {
+                maxSpeed: 100,
+                accelResponse: .5, // rapidez hacia targetSpeed
+                drag: 0.01,
+
+                // límites (radianes)
+                pitchLimit: THREE.MathUtils.degToRad(45),
+                bankLimit: THREE.MathUtils.degToRad(60),
+
+                // tasas a las que las teclas cambian los objetivos (deg/s)
+                pitchCmdRateDeg: 60,
+                bankCmdRateDeg: 90,
+
+                // respuesta (1/seg) para filtrar hacia los objetivos
+                pitchResponse: 4.0,
+                bankResponse: 5.0,
+
+                // auto-centrado cuando no hay input (1/seg)
+                pitchCentering: 0.8,
+                bankCentering: 1.2,
+
+                // yaw
+                turnRateGain: 1.2,         // ganancia viraje coordinado
+                yawTaxiRate: Math.PI * 1.2, // yaw directo en taxi
+
+                // transición taxi → vuelo
+                stallSpeed: 12,
+                ctrlVRange: 25,
+
+                // *** NUEVO: altura mínima (nivel de suelo) ***
+                minY: 1.6,
+
+                // *** NUEVO: gravedad simplificada (u/s^2) ***
+                gravity: 9.81,
+
+                // amortiguación vertical cuando hay potencia (reduce drift)
+                verticalDampingWhenPowered: 2.5
+            })
 
     }
 
@@ -454,13 +492,13 @@ export class SceneManager {
 
         this.airplaneCoordSystem = new THREE.Group()
         this.airplaneCoordSystem.add(this.airplane)
+        this.airplane.position.set(0, 0, 0)
         this.airplane.rotateY(Math.PI / 2).translateX(-95 * .015)
-        // this.airplane.scale.multiplyScalar(.015)
+        this.airplane.scale.multiplyScalar(.015)
 
-        this.airplaneCoordSystem.position.set(0, 5, 0)
         this.airplaneCoordSystem.rotateY(-Math.PI / 2)
         this.scene.add(this.airplaneCoordSystem)
-        this.airplane.position.set(8, 0, 12.5)
+        this.airplaneCoordSystem.position.set(-11, 0, 8)
     }
 
     animate() {
