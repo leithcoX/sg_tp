@@ -12,12 +12,9 @@ const greenMaterial = new THREE.MeshPhongMaterial({ color: 0x00FF00 })
 
 export class SceneManager {
     showWireFrames = false;
-    cameras = []
-    constructor(scene, camera) {
+    constructor(scene, cameras) {
         this.scene = scene
-        this.cameras.push(camera)
-        const persecutionCamera = this.cameras[0].clone()
-        this.cameras.push(persecutionCamera)
+        this.cameras = cameras
         this.setupEnv()
         this.setupCampBase()
         this.loadTerrain()
@@ -503,11 +500,11 @@ export class SceneManager {
         this.airplaneCoordSystem.rotateY(-Math.PI / 2)
         this.scene.add(this.airplaneCoordSystem)
         this.airplaneCoordSystem.position.set(-11, 0, 8)
-        // const persecutionCamera = this.cameras[0].clone()
-        // persecutionCamera.position.set(0, 5, 9)
-        // persecutionCamera.lookAt(0, 0, 0)
-        // this.cameras.push(persecutionCamera)
-        // this.airplaneCoordSystem.add(persecutionCamera)
+        const firstPersonCamera = this.cameras[0].clone()
+        firstPersonCamera.position.set(0, 0, -.35)
+        firstPersonCamera.lookAt(0,0,-3)
+        this.cameras.push(firstPersonCamera)
+        this.airplaneCoordSystem.add(firstPersonCamera)
     }
 
     resetAirplane() {
