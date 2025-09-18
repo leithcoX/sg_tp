@@ -202,7 +202,7 @@ export class SceneManager {
     }
 
     setupShip(shipModel) {
-        console.log(shipModel)
+        // console.log(shipModel)
         this.ship = shipModel.scene
         this.ship.position.set(0, -2.8, -40)
         this.ship.scale.set(.15, .15, .15)
@@ -500,8 +500,8 @@ export class SceneManager {
         this.airplaneCoordSystem.rotateY(-Math.PI / 2)
         this.scene.add(this.airplaneCoordSystem)
         this.airplaneCoordSystem.position.set(-11, 0, 8)
-        const firstPersonCamera = this.cameras[0].clone()
-        firstPersonCamera.position.set(0, 0, -.35)
+        const firstPersonCamera = this.cameras[2]
+        firstPersonCamera.position.set(0, 0, -.25)
         firstPersonCamera.lookAt(0,0,-3)
         this.cameras.push(firstPersonCamera)
         this.airplaneCoordSystem.add(firstPersonCamera)
