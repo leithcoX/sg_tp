@@ -12,8 +12,12 @@ const greenMaterial = new THREE.MeshPhongMaterial({ color: 0x00FF00 })
 
 export class SceneManager {
     showWireFrames = false;
-    constructor(scene) {
+    cameras = []
+    constructor(scene, camera) {
         this.scene = scene
+        this.cameras.push(camera)
+        const persecutionCamera = this.cameras[0].clone()
+        this.cameras.push(persecutionCamera)
         this.setupEnv()
         this.setupCampBase()
         this.loadTerrain()
@@ -21,8 +25,8 @@ export class SceneManager {
         this.setupAirplane()
         this.airPlaneController = new AirplaneController(this.airplaneCoordSystem,
             {
-                maxSpeed: 100,
-                accelResponse: .5, // rapidez hacia targetSpeed
+                maxSpeed: 40,
+                accelResponse: .2, // rapidez hacia targetSpeed
                 drag: 0.01,
 
                 // límites (radianes)
@@ -499,9 +503,33 @@ export class SceneManager {
         this.airplaneCoordSystem.rotateY(-Math.PI / 2)
         this.scene.add(this.airplaneCoordSystem)
         this.airplaneCoordSystem.position.set(-11, 0, 8)
+        // const persecutionCamera = this.cameras[0].clone()
+        // persecutionCamera.position.set(0, 5, 9)
+        // persecutionCamera.lookAt(0, 0, 0)
+        // this.cameras.push(persecutionCamera)
+        // this.airplaneCoordSystem.add(persecutionCamera)
+    }
+
+    resetAirplane() {
+        this.airPlaneController.setTransform({ position: new THREE.Vector3(-11, 0, 8), euler: new THREE.Euler(0,-Math.PI/2,0) })
+        console.log("Reseteo")
     }
 
     animate() {
         this.airPlaneController.update(.01)
+
+
+        // cámara de persecución
+        const persecutionCamera = this.cameras[1];
+        if (persecutionCamera) {
+            const offset = new THREE.Vector3(0, 2, 15); // detrás y arriba del avión
+            offset.applyQuaternion(this.airplaneCoordSystem.quaternion);
+
+            persecutionCamera.position.copy(this.airplaneCoordSystem.position).add(offset);
+
+            // mirar siempre hacia adelante del avión
+            const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(this.airplaneCoordSystem.quaternion);
+            persecutionCamera.lookAt(this.airplaneCoordSystem.position.clone().add(forward.multiplyScalar(50)));
+        }
     }
 }
