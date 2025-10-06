@@ -8,7 +8,7 @@ let scene, renderer, container, sceneManager;
 let cameras = []
 cameras.push(new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000))
 for (let i = 0; i < 7; i++) { cameras.push(cameras[0].clone()) }
-let current_camera = 0
+let current_camera = 1
 
 function setupThreeJs() {
     container = document.getElementById("container3D");
@@ -19,10 +19,10 @@ function setupThreeJs() {
 
     container.appendChild(renderer.domElement);
 
-    cameras[0].position.set(15, 25, 35);
-    cameras[0].lookAt(0, 0, 0);
+    cameras[1].position.set(15, 25, 35);
+    cameras[1].lookAt(0, 0, 0);
 
-    const controls = new OrbitControls(cameras[0], renderer.domElement);
+    const controls = new OrbitControls(cameras[1], renderer.domElement);
 
     window.addEventListener("resize", onResize);
     window.addEventListener("keydown", changeCamera);
