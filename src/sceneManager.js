@@ -83,7 +83,7 @@ export class SceneManager {
         this.texture = new THREE.TextureLoader().load('/sg_tp/maps/isle.png',
             (_) => {
                 this.setupTerrain();
-                console.log("Cargado")
+                console.log("Isla cargada")
             },
             function(xhr) {
                 console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
@@ -189,7 +189,7 @@ export class SceneManager {
     loadShip() {
         new GLTFLoader().load('/sg_tp/models/destructor.glb',
             (model) => {
-                console.log("Cargado")
+                console.log("Barco Cargado")
                 this.setupShip(model)
             },
             function(xhr) {
@@ -502,13 +502,13 @@ export class SceneManager {
         this.airplaneCoordSystem.position.set(-11, 0, 8)
         const firstPersonCamera = this.cameras[2]
         firstPersonCamera.position.set(0, 0, -.25)
-        firstPersonCamera.lookAt(0,0,-3)
+        firstPersonCamera.lookAt(0, 0, -3)
         this.cameras.push(firstPersonCamera)
         this.airplaneCoordSystem.add(firstPersonCamera)
     }
 
     resetAirplane() {
-        this.airPlaneController.setTransform({ position: new THREE.Vector3(-11, 0, 8), euler: new THREE.Euler(0,-Math.PI/2,0) })
+        this.airPlaneController.setTransform({ position: new THREE.Vector3(-11, 0, 8), euler: new THREE.Euler(0, -Math.PI / 2, 0) })
         console.log("Reseteo")
     }
 
