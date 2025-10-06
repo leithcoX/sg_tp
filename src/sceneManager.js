@@ -11,7 +11,9 @@ function addAxes(obj, size = 50) {
 const greenMaterial = new THREE.MeshPhongMaterial({ color: 0x00FF00 })
 
 export class SceneManager {
+    currentShipT = 0;
     showWireFrames = false;
+    isShipLoaded = false
     constructor(scene, cameras) {
         this.scene = scene
         this.cameras = cameras
@@ -190,6 +192,7 @@ export class SceneManager {
         new GLTFLoader().load('/sg_tp/models/destructor.glb',
             (model) => {
                 console.log("Barco Cargado")
+                this.isShipLoaded = true
                 this.setupShip(model)
             },
             function(xhr) {
@@ -202,11 +205,33 @@ export class SceneManager {
     }
 
     setupShip(shipModel) {
-        // console.log(shipModel)
-        this.ship = shipModel.scene
-        this.ship.position.set(0, -2.8, -40)
-        this.ship.scale.set(.15, .15, .15)
+        const shipScene = shipModel.scene
+        const scalar = 0.1
+        shipScene.position.set(450, 0, 55).multiplyScalar(scalar)
+        shipScene.scale.multiplyScalar(scalar)
+        shipScene.rotation.set(0, -Math.PI / 2, 0)
+
+        this.ship = new THREE.Group
+        this.ship.add(shipScene)
+        addAxes(this.ship, 8)
         this.scene.add(this.ship)
+
+        this.shipPathCurve = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(-35, -3, 0),
+            new THREE.Vector3(-35, -3, -45),
+            new THREE.Vector3(-15, -3, -60),
+            new THREE.Vector3(5, -3, -55),
+            new THREE.Vector3(45, -3, -5),
+            new THREE.Vector3(25, -3, 35),
+            new THREE.Vector3(-5, -3, 35),
+        ], true)
+
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xFF0000 });
+        const shipPathHelperCurve = new THREE.Line(new THREE.BufferGeometry().setFromPoints(this.shipPathCurve.getPoints(200)), lineMaterial)
+        this.scene.add(shipPathHelperCurve)
+
+        // this.scene.add(new THREE.AxesHelper(20).translateY(2))
+        // this.scene.add(new THREE.GridHelper(150,15).translateY(2))
     }
 
 
@@ -527,6 +552,15 @@ export class SceneManager {
             // mirar siempre hacia adelante del avión
             const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(this.airplaneCoordSystem.quaternion);
             persecutionCamera.lookAt(this.airplaneCoordSystem.position.clone().add(forward.multiplyScalar(50)));
+        }
+
+
+        this.currentShipT = (this.currentShipT + .001) % 1;
+        if (this.isShipLoaded) {
+            const position = this.shipPathCurve.getPointAt(this.currentShipT);
+            const tangent = this.shipPathCurve.getTangentAt(this.currentShipT)
+            this.ship.position.copy(position)
+            this.ship.lookAt(tangent.add(position));
         }
     }
 }
