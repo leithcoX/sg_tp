@@ -33,14 +33,16 @@ function changeCamera(event) {
     if (key === 'c') {
         current_camera++
         if (current_camera == sceneManager.cameras.length) current_camera = 0
+        console.log("Cambio de camara a " + current_camera)
         onResize()
 
     } else if (key === 'r') {
         sceneManager.resetAirplane()
     } else if (isFinite(key)) {
         current_camera = key
+        onResize()
+        console.log("Cambio de camara a " + current_camera)
     }
-    console.log("Cambio de camara a " + current_camera)
 }
 
 function onResize() {
