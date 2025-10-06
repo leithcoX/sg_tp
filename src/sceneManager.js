@@ -213,7 +213,6 @@ export class SceneManager {
 
         this.ship = new THREE.Group
         this.ship.add(shipScene)
-        addAxes(this.ship, 8)
         this.scene.add(this.ship)
 
         this.shipPathCurve = new THREE.CatmullRomCurve3([
@@ -226,12 +225,14 @@ export class SceneManager {
             new THREE.Vector3(-5, -3, 35),
         ], true)
 
+
+        // HELPERS
+
         const lineMaterial = new THREE.LineBasicMaterial({ color: 0xFF0000 });
         const shipPathHelperCurve = new THREE.Line(new THREE.BufferGeometry().setFromPoints(this.shipPathCurve.getPoints(200)), lineMaterial)
         this.scene.add(shipPathHelperCurve)
 
-        // this.scene.add(new THREE.AxesHelper(20).translateY(2))
-        // this.scene.add(new THREE.GridHelper(150,15).translateY(2))
+        addAxes(this.ship, 8)
     }
 
 
