@@ -219,7 +219,17 @@ export class SceneManager {
         const persecutionCamera = this.cameras[5]
         persecutionCamera.position.set(0,8,-25)
         persecutionCamera.lookAt(0,0,15)
+
+        const orbitalCamera = this.cameras[4]
+        orbitalCamera.position.set(0,8,-25)
+        orbitalCamera.lookAt(0,0,15)
+
+        this.shipCameraContainer = new THREE.Group()
+        this.scene.add(this.shipCameraContainer)
+        this.shipCameraContainer.add(orbitalCamera)
+
         this.ship.add(persecutionCamera)
+        // this.ship.add(orbitalCamera)
 
         this.scene.add(this.ship)
 
@@ -252,12 +262,14 @@ export class SceneManager {
         this.airPlaneController.update(.01)
         this.airplane.updatePersecutionCamera()
 
-        this.currentShipT = (this.currentShipT + .001) % 1;
+        this.currentShipT = (this.currentShipT + .0005) % 1;
         if (this.isShipLoaded) {
             const position = this.shipPathCurve.getPointAt(this.currentShipT);
             const tangent = this.shipPathCurve.getTangentAt(this.currentShipT)
             this.ship.position.copy(position)
             this.ship.lookAt(tangent.add(position));
+
+            this.shipCameraContainer.position.copy(this.ship.position);
         }
     }
 }

@@ -10,6 +10,8 @@ cameras.push(new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHei
 for (let i = 0; i < 7; i++) { cameras.push(cameras[0].clone()) }
 let current_camera = 1
 
+let controls2 = null
+
 function setupThreeJs() {
     container = document.getElementById("container3D");
 
@@ -23,6 +25,8 @@ function setupThreeJs() {
     cameras[1].lookAt(0, 0, 0);
 
     const controls = new OrbitControls(cameras[1], renderer.domElement);
+    controls2 = new OrbitControls(cameras[4], renderer.domElement);
+    controls2.enablePan = false;
 
     window.addEventListener("resize", onResize);
     window.addEventListener("keydown", changeCamera);
@@ -55,6 +59,10 @@ function onResize() {
 function animate() {
     requestAnimationFrame(animate);
     sceneManager.animate()
+    if (sceneManager.ship) {
+        controls2.target.copy(sceneManager.ship.position)
+        controls2.update()
+    }
     renderer.render(scene, sceneManager.cameras[current_camera]);
 }
 
