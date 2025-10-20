@@ -215,6 +215,12 @@ export class SceneManager {
 
         this.ship = new THREE.Group
         this.ship.add(shipScene)
+
+        const persecutionCamera = this.cameras[5]
+        persecutionCamera.position.set(0,8,-25)
+        persecutionCamera.lookAt(0,0,15)
+        this.ship.add(persecutionCamera)
+
         this.scene.add(this.ship)
 
         this.shipPathCurve = new THREE.CatmullRomCurve3([
