@@ -178,6 +178,14 @@ export class SceneManager {
         towerHead.rotateZ(Math.PI).rotateY(Math.PI / 4)
         tower.add(towerHead)
 
+        const towerHeadPosition = towerHead.getWorldPosition(new THREE.Vector3())
+        this.cameras[7].position.copy(towerHeadPosition.clone().add(new THREE.Vector3(10,0,10)) );
+        this.cameras[7].lookAt(towerHeadPosition)
+        // console.log(towerHeadPosition)
+
+        // const chel = new THREE.CameraHelper(this.cameras[7])
+        // this.scene.add(chel)
+
         // campBase.rotateY(Math.PI *1.55)
         // campBase.translateZ(25)
 

@@ -11,6 +11,7 @@ for (let i = 0; i < 7; i++) { cameras.push(cameras[0].clone()) }
 let current_camera = 1
 
 let controls2 = null
+let controls3 = null
 
 function setupThreeJs() {
     container = document.getElementById("container3D");
@@ -27,6 +28,9 @@ function setupThreeJs() {
     const controls = new OrbitControls(cameras[1], renderer.domElement);
     controls2 = new OrbitControls(cameras[4], renderer.domElement);
     controls2.enablePan = false;
+    controls3 = new OrbitControls(cameras[7], renderer.domElement);
+    controls3.enablePan = false
+    controls3.target.set(7,3.25,-1) // magic number sacado de loggear desde sceneManager
 
     window.addEventListener("resize", onResize);
     window.addEventListener("keydown", changeCamera);
