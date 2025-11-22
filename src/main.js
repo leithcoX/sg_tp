@@ -7,7 +7,7 @@ import { AirplaneController } from './airplaneController.js';
 let scene, renderer, container, sceneManager;
 let cameras = []
 cameras.push(new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000))
-for (let i = 0; i < 7; i++) { cameras.push(cameras[0].clone()) }
+for (let i = 0; i < 8; i++) { cameras.push(cameras[0].clone()) }
 let current_camera = 1
 
 let controls2 = null

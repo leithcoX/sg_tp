@@ -141,6 +141,10 @@ export class SceneManager {
         airstrip.translateZ(8)
         airstrip.translateX(2)
 
+        this.cameras[8].position.set(5,1.3,8)
+        this.cameras[8].lookAt(-7,2,8)
+        // this.scene.add(new THREE.CameraHelper(this.cameras[8]))
+
         const radiusTop = 1;
         const radiusBottom = 1;
         const height = 4;
