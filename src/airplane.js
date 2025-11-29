@@ -60,6 +60,7 @@ export class Airplane {
         /* HELIXES */
 
         const helixes = new THREE.Group()
+        helixes.name = "helixes"
         const helixGeometry = new THREE.CylinderGeometry(2, 1, 4, 4)
         const helixBufferGeometry = new THREE.BufferGeometry();
         const ip = { b: .3, t: 4.3 }
@@ -309,5 +310,15 @@ export class Airplane {
         this.persecutionCamera.position.copy(this.airplaneCoordSystem.position).add(offset);
         const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(this.airplaneCoordSystem.quaternion);
         this.persecutionCamera.lookAt(this.airplaneCoordSystem.position.clone().add(forward.multiplyScalar(50)));
+    }
+
+    animateHelixes(v) {
+        const tmp = this.airplane.getObjectsByProperty("name", "helixes")
+        const l = tmp[0]
+        const r = tmp[1]
+        v *= 0.1
+        l.rotateX(v)
+        r.rotateX(v)
+        console.log("logeo velocidad", v)
     }
 }
