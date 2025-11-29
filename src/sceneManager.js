@@ -28,7 +28,7 @@ class Bullet {
     }
 
     hasImpacted() {
-        return this.mesh.position.y < 5
+        return this.mesh.position.y < -10
     }
 
     destroy() {
@@ -310,12 +310,19 @@ export class SceneManager {
             console.log("Aun hay cooldown")
             return
         }
-        console.log("Presionaste espacio")
+
+        const tmp = new THREE.Vector3();
+        const pos = new THREE.Vector3();
+
+        this.turretCamera.getWorldDirection(tmp)
+        this.turretCamera.getWorldPosition(pos)
+
         this.shootCooldown = SHOOT_COOLDOWN
         console.log("ahora el cooldown es", this.shootCooldown)
-        const auxBullet = new Bullet(new THREE.Vector3(0, 5, 0), new THREE.Vector3(-10, 10, 0), this.bulletModel.clone())
+
+        const auxBullet = new Bullet(pos, tmp.multiplyScalar(30), this.bulletModel.clone())
         this.bullets.push(auxBullet)
-        this.ship.add(auxBullet.mesh) // debe ser la scene no ship
+        this.scene.add(auxBullet.mesh)
     }
 
     resetAirplane() {
@@ -330,12 +337,12 @@ export class SceneManager {
         this.currentShipT = (this.currentShipT + .0005) % 1;
 
         this.shootCooldown = Math.max(0, this.shootCooldown - 1)
-        if (this.shootCooldown >= 0)
+        if (this.shootCooldown > 0)
             console.log(this.shootCooldown)
 
         for (let i = this.bullets.length - 1; i >= 0; i--) {
             const b = this.bullets[i]
-            b.update(.01)
+            b.update(.015)
             if (b.hasImpacted()) {
                 b.destroy()
                 this.bullets.splice(i, 1)
