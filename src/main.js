@@ -5,9 +5,9 @@ import { SceneManager } from "./sceneManager.js"
 import { AirplaneController } from './airplaneController.js';
 
 let scene, renderer, container, sceneManager;
+let vcam = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000)
 let cameras = []
-cameras.push(new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000))
-for (let i = 0; i < 8; i++) { cameras.push(cameras[0].clone()) }
+for (let i = 0; i < 9; i++) { cameras.push(vcam.clone()) }
 let current_camera = 1
 
 let controls2 = null
@@ -26,7 +26,9 @@ function setupThreeJs() {
     cameras[1].lookAt(0, 0, 0);
 
     const controls = new OrbitControls(cameras[1], renderer.domElement);
-    controls2 = new OrbitControls(cameras[4], renderer.domElement);
+    vcam.position.set(10,0,0)
+    controls2 = new OrbitControls(vcam, renderer.domElement);
+    controls2.target.set(0, 0, 0);
     controls2.enablePan = false;
     controls3 = new OrbitControls(cameras[7], renderer.domElement);
     controls3.enablePan = false
@@ -63,14 +65,11 @@ function onResize() {
 function animate() {
     requestAnimationFrame(animate);
     sceneManager.animate()
-    if (sceneManager.ship) {
-        controls2.target.copy(sceneManager.ship.position)
-        controls2.update()
-    }
+    controls2.update()
     renderer.render(scene, sceneManager.cameras[current_camera]);
 }
 
 setupThreeJs()
-sceneManager = new SceneManager(scene, cameras)
+sceneManager = new SceneManager(scene, cameras, vcam)
 onResize()
 animate();

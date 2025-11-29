@@ -15,9 +15,11 @@ export class SceneManager {
     currentShipT = 0;
     showWireFrames = false;
     isShipLoaded = false
-    constructor(scene, cameras) {
+    constructor(scene, cameras, vcam) {
         this.scene = scene
         this.cameras = cameras
+        this.vcam = vcam
+        // this.vcam = cameras[6].clone()
         this.setupEnv()
         this.setupCampBase()
         this.loadTerrain()
@@ -232,16 +234,7 @@ export class SceneManager {
         persecutionCamera.position.set(0,8,-25)
         persecutionCamera.lookAt(0,0,15)
 
-        const orbitalCamera = this.cameras[4]
-        orbitalCamera.position.set(0,8,-25)
-        orbitalCamera.lookAt(0,0,15)
-
-        this.shipCameraContainer = new THREE.Group()
-        this.scene.add(this.shipCameraContainer)
-        this.shipCameraContainer.add(orbitalCamera)
-
         this.ship.add(persecutionCamera)
-        // this.ship.add(orbitalCamera)
 
         this.scene.add(this.ship)
 
@@ -281,7 +274,21 @@ export class SceneManager {
             this.ship.position.copy(position)
             this.ship.lookAt(tangent.add(position));
 
-            this.shipCameraContainer.position.copy(this.ship.position);
+
+            // Manejo de camara orbital del barco
+            // Es un objeto en movimiento por lo que se simula una camara virtual
+            const tmpOffset = new THREE.Vector3();
+            const objWorldQuat = new THREE.Quaternion();
+            tmpOffset.copy(this.vcam.position); // ya que controls.target=0,0,0
+            this.ship.getWorldQuaternion(objWorldQuat);
+            tmpOffset.applyQuaternion(objWorldQuat);
+
+            this.cameras[4].position.copy(position).add(tmpOffset);
+            // Alineamos el “up” de la cámara REAL con el “up” mundial del objeto
+            // const upWorld = new THREE.Vector3(0,1,0);
+            // upWorld.applyQuaternion(objWorldQuat);
+            // this.cameras[4].up.copy(upWorld);
+            this.cameras[4].lookAt(position);
         }
     }
 }
