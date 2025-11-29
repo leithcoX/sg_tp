@@ -52,6 +52,7 @@ class ExplotionManager {
     constructor(scene) {
         this.scene = scene
         this.modelMaterial.transparent = true;
+        this.modelMaterial.depthWrite = false;
         this.modelMaterial.opacity = 1;
     }
 
