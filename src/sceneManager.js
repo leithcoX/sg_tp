@@ -21,14 +21,14 @@ const EXPLOTION_FINAL_SIZE = 10
 class Explotion {
     age = 0
     alive = true
-    constructor(position, lifetime,  mesh) {
+    constructor(position, lifetime, mesh) {
         this.lifetime = lifetime
         this.mesh = mesh
         this.mesh.position.copy(position)
     }
 
     update(dt) {
-        if ( !this.alive ) return
+        if (!this.alive) return
 
         this.age += dt
         const t = this.age / this.lifetime;
@@ -47,7 +47,7 @@ class Explotion {
 class ExplotionManager {
     explotions = []
     modelGeometry = new THREE.SphereGeometry(1)
-    modelMaterial = new THREE.MeshPhongMaterial({color:"0xf8f8f8"})
+    modelMaterial = new THREE.MeshPhongMaterial({ color: "0xf8f8f8" })
 
     constructor(scene) {
         this.scene = scene
@@ -121,7 +121,7 @@ class BulletManager {
             }
         }
     }
-    
+
     destroyBullet(b) {
         this.explotionManager.addExplotion(b.mesh.position)
         b.mesh.parent.remove(b.mesh)
@@ -356,8 +356,8 @@ export class SceneManager {
 
         const tmp = new THREE.Vector3()
         cannon.getWorldPosition(tmp)
-        this.turretCamera.lookAt(tmp.add(new THREE.Vector3(1,0,0)))
-        this.turretCamera.position.set(-1,4,0)
+        this.turretCamera.lookAt(tmp.add(new THREE.Vector3(1, 0, 0)))
+        this.turretCamera.position.set(-1, 4, 0)
         this.scene.add(new THREE.CameraHelper(this.turretCamera))
 
         const scalar = 0.1
@@ -413,18 +413,18 @@ export class SceneManager {
         this.bulletManager.addBullet(pos.add(dir), dir.multiplyScalar(30))
     }
 
-   rotateCannonUp() {
+    rotateCannonUp() {
         this.cannon.rotateZ(0.01 * Math.PI)
     }
 
-   rotateCannonDown() {
+    rotateCannonDown() {
         this.cannon.rotateZ(-0.01 * Math.PI)
     }
 
-   rotateCannonLeft() {
+    rotateCannonLeft() {
         this.turret.rotateY(0.01 * Math.PI)
     }
-   rotateCannonRight() {
+    rotateCannonRight() {
         this.turret.rotateY(-0.01 * Math.PI)
     }
 
@@ -471,10 +471,10 @@ export class SceneManager {
     }
 
     test() {
-        this.explotionManager.addExplotion(new THREE.Vector3(0,10,0))
+        this.explotionManager.addExplotion(new THREE.Vector3(0, 10, 0))
     }
     test2() {
-        this.explotionManager.addExplotion(new THREE.Vector3(10,10,0))
+        this.explotionManager.addExplotion(new THREE.Vector3(10, 10, 0))
     }
 
 }
