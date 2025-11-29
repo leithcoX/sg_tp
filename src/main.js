@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+// import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 
 import { SceneManager } from "./sceneManager.js"
 import { AirplaneController } from './airplaneController.js';
@@ -33,21 +33,43 @@ function setupThreeJs() {
     controls2 = new OrbitControls(vcam, renderer.domElement);
     controls2.target.set(0, 0, 0);
     controls2.enablePan = false;
-    cannonControl = new PointerLockControls(cameras[6], renderer.domElement)
-    cannonControl.pointerSpeed = 2
+    // cannonControl = new PointerLockControls(cameras[6], renderer.domElement)
+    // cannonControl.pointerSpeed = 2
     controls3 = new OrbitControls(cameras[7], renderer.domElement);
     controls3.enablePan = false
     controls3.target.set(7, 3.25, -1) // magic number sacado de loggear desde sceneManager
 
     window.addEventListener("resize", onResize);
     window.addEventListener("keydown", changeCamera);
-    window.addEventListener("keydown", shootCannon);
+    window.addEventListener("keydown", manageCannon);
 }
 
-function shootCannon(event) {
+function manageCannon(event) {
     const key = event.key
-    if (key === ' ') {
-        sceneManager.shootShipCannon()
+    switch (key) {
+        case ' ':
+            sceneManager.shootShipCannon()
+            break;
+
+        case 'w':
+            sceneManager.rotateCannonUp()
+            // console.log("holding w")
+            break;
+
+        case 's':
+            sceneManager.rotateCannonDown()
+            break
+
+        case 'a':
+            sceneManager.rotateCannonLeft()
+            break
+
+        case 'd':
+            sceneManager.rotateCannonRight()
+            break
+
+        default:
+            break;
     }
 }
 
@@ -63,12 +85,12 @@ function changeCamera(event) {
         sceneManager.resetAirplane()
     } else if (isFinite(key) && key != ' ') {
         if (key == 6) {
-            cannonControl.lock()
+            // cannonControl.lock()
             controls.enabled = false
             controls2.enabled = false
             controls3.enabled = false
         } else {
-            cannonControl.unlock()
+            // cannonControl.unlock()
             controls.enabled = true
             controls2.enabled = true
             controls3.enabled = true

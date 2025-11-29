@@ -252,22 +252,20 @@ export class SceneManager {
     setupShip(shipModel) {
         const shipScene = shipModel.scene
 
-        const turret = shipScene.children[0].children[0]
-        // turret.position.set(0,10,0)
-        turret.rotateY(0)
-        console.log(turret)
+        this.turret = shipScene.children[0].children[0]
+        const turret = this.turret
+
+        this.cannon = turret.children[0]
+        const cannon = this.cannon
+
         this.turretCamera = this.cameras[6]
+        cannon.add(this.turretCamera)
 
-        turret.add(this.turretCamera)
         const tmp = new THREE.Vector3()
-        turret.getWorldPosition(tmp)
-        console.log(tmp.add(new THREE.Vector3(1,0,0)))
-
-        this.turretCamera.lookAt(tmp)
+        cannon.getWorldPosition(tmp)
+        this.turretCamera.lookAt(tmp.add(new THREE.Vector3(1,0,0)))
         this.turretCamera.position.set(-1,4,0)
         this.scene.add(new THREE.CameraHelper(this.turretCamera))
-
-
 
         const scalar = 0.1
         shipScene.position.set(450, 0, 55).multiplyScalar(scalar)
@@ -311,19 +309,34 @@ export class SceneManager {
             return
         }
 
-        const tmp = new THREE.Vector3();
-        const pos = new THREE.Vector3();
-
-        this.turretCamera.getWorldDirection(tmp)
-        this.turretCamera.getWorldPosition(pos)
-
         this.shootCooldown = SHOOT_COOLDOWN
         console.log("ahora el cooldown es", this.shootCooldown)
 
-        const auxBullet = new Bullet(pos, tmp.multiplyScalar(30), this.bulletModel.clone())
+        const dir = new THREE.Vector3();
+        const pos = new THREE.Vector3();
+        this.turretCamera.getWorldDirection(dir)
+        this.cannon.getWorldPosition(pos)
+
+        const auxBullet = new Bullet(pos.add(dir), dir.multiplyScalar(30), this.bulletModel.clone())
         this.bullets.push(auxBullet)
         this.scene.add(auxBullet.mesh)
     }
+
+   rotateCannonUp() {
+        this.cannon.rotateZ(0.01 * Math.PI)
+    }
+
+   rotateCannonDown() {
+        this.cannon.rotateZ(-0.01 * Math.PI)
+    }
+
+   rotateCannonLeft() {
+        this.turret.rotateY(0.01 * Math.PI)
+    }
+   rotateCannonRight() {
+        this.turret.rotateY(-0.01 * Math.PI)
+    }
+
 
     resetAirplane() {
         this.airPlaneController.setTransform({ position: new THREE.Vector3(-11, 0, 8), euler: new THREE.Euler(0, -Math.PI / 2, 0) })
