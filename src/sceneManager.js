@@ -289,6 +289,10 @@ export class SceneManager {
     }
     
     shootShipCannon() {
+        if (this.shootCooldown > 0) {
+            console.log("Aun hay cooldown")
+            return
+        }
         console.log("Presionaste espacio")
         this.shootCooldown = SHOOT_COOLDOWN
         console.log("ahora el cooldown es", this.shootCooldown)
