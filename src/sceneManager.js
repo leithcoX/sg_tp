@@ -27,6 +27,14 @@ class Bullet {
         this.mesh.position.add(speed.multiplyScalar(dt))
         this.speed.y += GRAVITY * dt
     }
+
+    hasImpacted() {
+        return this.mesh.position.y > 5
+    }
+
+    destroy() {
+        this.mesh.parent.remove(this.mesh)
+    }
 }
 
 export class SceneManager {
@@ -34,13 +42,13 @@ export class SceneManager {
     showWireFrames = false;
     isShipLoaded = false
     shootCooldown = 0
-    bullet = new THREE.Mesh(new THREE.SphereGeometry(.15), new THREE.MeshPhongMaterial({color: "0xf0f0f0"}))
+    bulletModel = new THREE.Mesh(new THREE.SphereGeometry(.15), new THREE.MeshPhongMaterial({color: "0xf0f0f0"}))
     bullets = []
     constructor(scene, cameras, vcam) {
         this.scene = scene
         this.cameras = cameras
         this.vcam = vcam
-        addAxes(this.bullet)
+        addAxes(this.bulletModel)
         // this.vcam = cameras[6].clone()
         this.setupEnv()
         this.setupCampBase()
@@ -279,13 +287,14 @@ export class SceneManager {
 
         addAxes(this.ship, 8)
     }
+    
     shootShipCannon() {
         console.log("Presionaste espacio")
         this.shootCooldown = SHOOT_COOLDOWN
         console.log("ahora el cooldown es", this.shootCooldown)
-        const auxBullet = new Bullet(new THREE.Vector3(0,10,0), new THREE.Vector3(0,0,0), this.bullet.clone())
+        const auxBullet = new Bullet(new THREE.Vector3(0,5,0), new THREE.Vector3(-10,10,0), this.bulletModel.clone())
         this.bullets.push(auxBullet)
-        this.ship.add(auxBullet.mesh)
+        this.ship.add(auxBullet.mesh) // debe ser la scene no ship
     }
 
     resetAirplane() {
@@ -303,9 +312,14 @@ export class SceneManager {
         if (this.shootCooldown >= 0)
             console.log(this.shootCooldown)
 
-        for (let b of this.bullets) {
-            // console.log(b)
+        for (let i = this.bullets.length - 1; i >= 0 ; i--)  {
+            const b = this.bullets[i]
             b.update(.01)
+            if (b.hasImpacted()) {
+                b.destroy()
+                this.bullets.splice(i,1)
+                console.log("Bullet cleaned")
+            }
         }
         if (this.isShipLoaded) {
             const position = this.shipPathCurve.getPointAt(this.currentShipT);
