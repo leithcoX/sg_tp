@@ -31,9 +31,35 @@ class Bullet {
         return this.mesh.position.y < -10
     }
 
-    destroy() {
-        this.mesh.parent.remove(this.mesh)
+}
+
+class BulletManager {
+    bullets = []
+    bulletModel = new THREE.Mesh(new THREE.SphereGeometry(.15), new THREE.MeshPhongMaterial({ color: "0xf0f0f0" }))
+    constructor(scene) { this.scene = scene }
+
+    addBullet(position, speed) {
+        const b = new Bullet(position, speed, this.bulletModel.clone())
+        this.bullets.push(b)
+        this.scene.add(b.mesh)
     }
+
+    updateBullets(dt) {
+        for (let i = this.bullets.length - 1; i >= 0; i--) {
+            const b = this.bullets[i]
+            b.update(dt)
+            if (b.hasImpacted()) {
+                this.destroyBullet(b)
+                this.bullets.splice(i, 1)
+                console.log("Bullet cleaned")
+            }
+        }
+    }
+    
+    destroyBullet(b) {
+        b.mesh.parent.remove(b.mesh)
+    }
+
 }
 
 export class SceneManager {
@@ -41,13 +67,11 @@ export class SceneManager {
     showWireFrames = false;
     isShipLoaded = false
     shootCooldown = 0
-    bulletModel = new THREE.Mesh(new THREE.SphereGeometry(.15), new THREE.MeshPhongMaterial({ color: "0xf0f0f0" }))
-    bullets = []
     constructor(scene, cameras, vcam) {
         this.scene = scene
+        this.bulletManager = new BulletManager(scene)
         this.cameras = cameras
         this.vcam = vcam
-        addAxes(this.bulletModel)
         // this.vcam = cameras[6].clone()
         this.setupEnv()
         this.setupCampBase()
@@ -317,9 +341,7 @@ export class SceneManager {
         this.turretCamera.getWorldDirection(dir)
         this.cannon.getWorldPosition(pos)
 
-        const auxBullet = new Bullet(pos.add(dir), dir.multiplyScalar(30), this.bulletModel.clone())
-        this.bullets.push(auxBullet)
-        this.scene.add(auxBullet.mesh)
+        this.bulletManager.addBullet(pos.add(dir), dir.multiplyScalar(30))
     }
 
    rotateCannonUp() {
@@ -353,15 +375,7 @@ export class SceneManager {
         if (this.shootCooldown > 0)
             console.log(this.shootCooldown)
 
-        for (let i = this.bullets.length - 1; i >= 0; i--) {
-            const b = this.bullets[i]
-            b.update(.015)
-            if (b.hasImpacted()) {
-                b.destroy()
-                this.bullets.splice(i, 1)
-                console.log("Bullet cleaned")
-            }
-        }
+        this.bulletManager.updateBullets(.015)
         if (this.isShipLoaded) {
             const position = this.shipPathCurve.getPointAt(this.currentShipT);
             const tangent = this.shipPathCurve.getTangentAt(this.currentShipT)
