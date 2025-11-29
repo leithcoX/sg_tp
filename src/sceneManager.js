@@ -6,6 +6,7 @@ import { AirplaneController } from './airplaneController';
 import { Airplane } from './airplane'
 
 const SHOOT_COOLDOWN = 100
+const GRAVITY = -10
 
 function addAxes(obj, size = 50) {
     obj.add(new THREE.AxesHelper(size))
@@ -13,15 +14,33 @@ function addAxes(obj, size = 50) {
 
 const greenMaterial = new THREE.MeshPhongMaterial({ color: 0x00FF00 })
 
+class Bullet {
+
+    constructor(position, speed, mesh) {
+        this.mesh = mesh
+        this.mesh.position.copy(position)
+        this.speed = speed
+    }
+
+    update(dt) {
+        const speed = this.speed.clone()
+        this.mesh.position.add(speed.multiplyScalar(dt))
+        this.speed.y += GRAVITY * dt
+    }
+}
+
 export class SceneManager {
     currentShipT = 0;
     showWireFrames = false;
     isShipLoaded = false
     shootCooldown = 0
+    bullet = new THREE.Mesh(new THREE.SphereGeometry(.15), new THREE.MeshPhongMaterial({color: "0xf0f0f0"}))
+    bullets = []
     constructor(scene, cameras, vcam) {
         this.scene = scene
         this.cameras = cameras
         this.vcam = vcam
+        addAxes(this.bullet)
         // this.vcam = cameras[6].clone()
         this.setupEnv()
         this.setupCampBase()
@@ -264,6 +283,9 @@ export class SceneManager {
         console.log("Presionaste espacio")
         this.shootCooldown = SHOOT_COOLDOWN
         console.log("ahora el cooldown es", this.shootCooldown)
+        const auxBullet = new Bullet(new THREE.Vector3(0,10,0), new THREE.Vector3(0,0,0), this.bullet.clone())
+        this.bullets.push(auxBullet)
+        this.ship.add(auxBullet.mesh)
     }
 
     resetAirplane() {
@@ -281,6 +303,10 @@ export class SceneManager {
         if (this.shootCooldown >= 0)
             console.log(this.shootCooldown)
 
+        for (let b of this.bullets) {
+            // console.log(b)
+            b.update(.01)
+        }
         if (this.isShipLoaded) {
             const position = this.shipPathCurve.getPointAt(this.currentShipT);
             const tangent = this.shipPathCurve.getTangentAt(this.currentShipT)
