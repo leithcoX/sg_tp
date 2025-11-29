@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
 import { ElevationGeometry } from './elevationGeometry'
 import { AirplaneController } from './airplaneController';
 import { Airplane } from './airplane'
@@ -252,6 +251,24 @@ export class SceneManager {
 
     setupShip(shipModel) {
         const shipScene = shipModel.scene
+
+        const turret = shipScene.children[0].children[0]
+        // turret.position.set(0,10,0)
+        turret.rotateY(0)
+        console.log(turret)
+        this.turretCamera = this.cameras[6]
+
+        turret.add(this.turretCamera)
+        const tmp = new THREE.Vector3()
+        turret.getWorldPosition(tmp)
+        console.log(tmp.add(new THREE.Vector3(1,0,0)))
+
+        this.turretCamera.lookAt(tmp)
+        this.turretCamera.position.set(-1,4,0)
+        this.scene.add(new THREE.CameraHelper(this.turretCamera))
+
+
+
         const scalar = 0.1
         shipScene.position.set(450, 0, 55).multiplyScalar(scalar)
         shipScene.scale.multiplyScalar(scalar)
