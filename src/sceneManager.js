@@ -13,6 +13,68 @@ function addAxes(obj, size = 50) {
 
 const greenMaterial = new THREE.MeshPhongMaterial({ color: 0x00FF00 })
 
+
+const EXPLOTION_MAX_TIME = 4
+const EXPLOTION_INITIAL_SIZE = 1
+const EXPLOTION_FINAL_SIZE = 10
+
+class Explotion {
+    age = 0
+    alive = true
+    constructor(position, lifetime,  mesh) {
+        this.lifetime = lifetime
+        this.mesh = mesh
+        this.mesh.position.copy(position)
+    }
+
+    update(dt) {
+        if ( !this.alive ) return
+
+        this.age += dt
+        const t = this.age / this.lifetime;
+
+        if (t >= 1) {
+            this.alive = false;
+            return;
+        }
+
+        const size = EXPLOTION_INITIAL_SIZE + (EXPLOTION_FINAL_SIZE - EXPLOTION_INITIAL_SIZE) * t;
+        this.mesh.scale.set(size, size, size);
+        this.mesh.material.opacity = 1 - t;
+    }
+}
+
+class ExplotionManager {
+    explotions = []
+    modelGeometry = new THREE.SphereGeometry(1)
+    modelMaterial = new THREE.MeshPhongMaterial({color:"0xf8f8f8"})
+
+    constructor(scene) {
+        this.scene = scene
+        this.modelMaterial.transparent = true;
+        this.modelMaterial.opacity = 1;
+    }
+
+    addExplotion(position, time = EXPLOTION_MAX_TIME) {
+        const e = new Explotion(position, time, new THREE.Mesh(this.modelGeometry, this.modelMaterial.clone()))
+        this.scene.add(e.mesh)
+        this.explotions.push(e)
+    }
+
+    updateExplotions(dt) {
+        for (let i = this.explotions.length - 1; i >= 0; i--) {
+            const e = this.explotions[i]
+            e.update(dt)
+            if (!e.alive) {
+                this.explotions.splice(i, 1)
+                this.scene.remove(e.mesh)
+                console.log("Explotion ended")
+            }
+        }
+    }
+}
+
+
 class Bullet {
 
     constructor(position, speed, mesh) {
@@ -28,7 +90,7 @@ class Bullet {
     }
 
     hasImpacted() {
-        return this.mesh.position.y < -10
+        return this.mesh.position.y < -3
     }
 
 }
@@ -36,7 +98,10 @@ class Bullet {
 class BulletManager {
     bullets = []
     bulletModel = new THREE.Mesh(new THREE.SphereGeometry(.15), new THREE.MeshPhongMaterial({ color: "0xf0f0f0" }))
-    constructor(scene) { this.scene = scene }
+    constructor(scene, explotionManager) {
+        this.scene = scene
+        this.explotionManager = explotionManager
+    }
 
     addBullet(position, speed) {
         const b = new Bullet(position, speed, this.bulletModel.clone())
@@ -57,6 +122,7 @@ class BulletManager {
     }
     
     destroyBullet(b) {
+        this.explotionManager.addExplotion(b.mesh.position)
         b.mesh.parent.remove(b.mesh)
     }
 
@@ -69,7 +135,8 @@ export class SceneManager {
     shootCooldown = 0
     constructor(scene, cameras, vcam) {
         this.scene = scene
-        this.bulletManager = new BulletManager(scene)
+        this.explotionManager = new ExplotionManager(scene)
+        this.bulletManager = new BulletManager(scene, this.explotionManager)
         this.cameras = cameras
         this.vcam = vcam
         // this.vcam = cameras[6].clone()
@@ -372,10 +439,11 @@ export class SceneManager {
         this.currentShipT = (this.currentShipT + .0005) % 1;
 
         this.shootCooldown = Math.max(0, this.shootCooldown - 1)
-        if (this.shootCooldown > 0)
-            console.log(this.shootCooldown)
+        // if (this.shootCooldown > 0)
+        //     console.log(this.shootCooldown)
 
         this.bulletManager.updateBullets(.015)
+        this.explotionManager.updateExplotions(.015)
         if (this.isShipLoaded) {
             const position = this.shipPathCurve.getPointAt(this.currentShipT);
             const tangent = this.shipPathCurve.getTangentAt(this.currentShipT)
