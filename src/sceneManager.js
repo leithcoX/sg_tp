@@ -5,6 +5,8 @@ import { ElevationGeometry } from './elevationGeometry'
 import { AirplaneController } from './airplaneController';
 import { Airplane } from './airplane'
 
+const SHOOT_COOLDOWN = 100
+
 function addAxes(obj, size = 50) {
     obj.add(new THREE.AxesHelper(size))
 }
@@ -15,6 +17,7 @@ export class SceneManager {
     currentShipT = 0;
     showWireFrames = false;
     isShipLoaded = false
+    shootCooldown = 0
     constructor(scene, cameras, vcam) {
         this.scene = scene
         this.cameras = cameras
@@ -257,6 +260,11 @@ export class SceneManager {
 
         addAxes(this.ship, 8)
     }
+    shootShipCannon() {
+        console.log("Presionaste espacio")
+        this.shootCooldown = SHOOT_COOLDOWN
+        console.log("ahora el cooldown es", this.shootCooldown)
+    }
 
     resetAirplane() {
         this.airPlaneController.setTransform({ position: new THREE.Vector3(-11, 0, 8), euler: new THREE.Euler(0, -Math.PI / 2, 0) })
@@ -268,6 +276,11 @@ export class SceneManager {
         this.airplane.updatePersecutionCamera()
 
         this.currentShipT = (this.currentShipT + .0005) % 1;
+
+        this.shootCooldown = Math.max(0, this.shootCooldown-1)
+        if (this.shootCooldown >= 0)
+            console.log(this.shootCooldown)
+
         if (this.isShipLoaded) {
             const position = this.shipPathCurve.getPointAt(this.currentShipT);
             const tangent = this.shipPathCurve.getTangentAt(this.currentShipT)

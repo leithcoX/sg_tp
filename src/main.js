@@ -36,6 +36,14 @@ function setupThreeJs() {
 
     window.addEventListener("resize", onResize);
     window.addEventListener("keydown", changeCamera);
+    window.addEventListener("keydown", shootCannon);
+}
+
+function shootCannon(event) {
+    const key = event.key
+    if (key === ' ') {
+        sceneManager.shootShipCannon()
+    }
 }
 
 function changeCamera(event) {
