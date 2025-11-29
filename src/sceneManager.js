@@ -124,6 +124,7 @@ class BulletManager {
     destroyBullet(b) {
         this.explotionManager.addExplotion(b.mesh.position)
         b.mesh.parent.remove(b.mesh)
+
     }
 
 }
@@ -467,4 +468,12 @@ export class SceneManager {
             this.cameras[4].lookAt(position);
         }
     }
+
+    test() {
+        this.explotionManager.addExplotion(new THREE.Vector3(0,10,0))
+    }
+    test2() {
+        this.explotionManager.addExplotion(new THREE.Vector3(10,10,0))
+    }
+
 }

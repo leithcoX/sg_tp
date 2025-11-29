@@ -68,6 +68,13 @@ function manageCannon(event) {
             sceneManager.rotateCannonRight()
             break
 
+        case 't':
+            sceneManager.test()
+            break
+        case 'f':
+            sceneManager.test2()
+            break
+
         default:
             break;
     }
