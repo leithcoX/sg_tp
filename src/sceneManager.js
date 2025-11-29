@@ -29,7 +29,7 @@ class Bullet {
     }
 
     hasImpacted() {
-        return this.mesh.position.y > 5
+        return this.mesh.position.y < 5
     }
 
     destroy() {
