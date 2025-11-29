@@ -358,7 +358,7 @@ export class SceneManager {
         cannon.getWorldPosition(tmp)
         this.turretCamera.lookAt(tmp.add(new THREE.Vector3(1, 0, 0)))
         this.turretCamera.position.set(-1, 4, 0)
-        this.scene.add(new THREE.CameraHelper(this.turretCamera))
+        // this.scene.add(new THREE.CameraHelper(this.turretCamera))
 
         const scalar = 0.1
         shipScene.position.set(450, 0, 55).multiplyScalar(scalar)
@@ -389,11 +389,11 @@ export class SceneManager {
 
         // HELPERS
 
-        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xFF0000 });
-        const shipPathHelperCurve = new THREE.Line(new THREE.BufferGeometry().setFromPoints(this.shipPathCurve.getPoints(200)), lineMaterial)
-        this.scene.add(shipPathHelperCurve)
+        // const lineMaterial = new THREE.LineBasicMaterial({ color: 0xFF0000 });
+        // const shipPathHelperCurve = new THREE.Line(new THREE.BufferGeometry().setFromPoints(this.shipPathCurve.getPoints(200)), lineMaterial)
+        // this.scene.add(shipPathHelperCurve)
 
-        addAxes(this.ship, 8)
+        // addAxes(this.ship, 8)
     }
 
     shootShipCannon() {
