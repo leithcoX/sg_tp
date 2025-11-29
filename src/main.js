@@ -26,13 +26,13 @@ function setupThreeJs() {
     cameras[1].lookAt(0, 0, 0);
 
     const controls = new OrbitControls(cameras[1], renderer.domElement);
-    vcam.position.set(10,0,0)
+    vcam.position.set(10, 0, 0)
     controls2 = new OrbitControls(vcam, renderer.domElement);
     controls2.target.set(0, 0, 0);
     controls2.enablePan = false;
     controls3 = new OrbitControls(cameras[7], renderer.domElement);
     controls3.enablePan = false
-    controls3.target.set(7,3.25,-1) // magic number sacado de loggear desde sceneManager
+    controls3.target.set(7, 3.25, -1) // magic number sacado de loggear desde sceneManager
 
     window.addEventListener("resize", onResize);
     window.addEventListener("keydown", changeCamera);
@@ -56,7 +56,7 @@ function changeCamera(event) {
 
     } else if (key === 'r') {
         sceneManager.resetAirplane()
-    } else if (isFinite(key) && key != ' ' ) {
+    } else if (isFinite(key) && key != ' ') {
         current_camera = key
         onResize()
         console.log("Cambio de camara a " + current_camera)

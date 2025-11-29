@@ -42,7 +42,7 @@ export class SceneManager {
     showWireFrames = false;
     isShipLoaded = false
     shootCooldown = 0
-    bulletModel = new THREE.Mesh(new THREE.SphereGeometry(.15), new THREE.MeshPhongMaterial({color: "0xf0f0f0"}))
+    bulletModel = new THREE.Mesh(new THREE.SphereGeometry(.15), new THREE.MeshPhongMaterial({ color: "0xf0f0f0" }))
     bullets = []
     constructor(scene, cameras, vcam) {
         this.scene = scene
@@ -173,8 +173,8 @@ export class SceneManager {
         airstrip.translateZ(8)
         airstrip.translateX(2)
 
-        this.cameras[8].position.set(5,1.3,8)
-        this.cameras[8].lookAt(-7,2,8)
+        this.cameras[8].position.set(5, 1.3, 8)
+        this.cameras[8].lookAt(-7, 2, 8)
         // this.scene.add(new THREE.CameraHelper(this.cameras[8]))
 
         const radiusTop = 1;
@@ -215,7 +215,7 @@ export class SceneManager {
         tower.add(towerHead)
 
         const towerHeadPosition = towerHead.getWorldPosition(new THREE.Vector3())
-        this.cameras[7].position.copy(towerHeadPosition.clone().add(new THREE.Vector3(10,0,10)) );
+        this.cameras[7].position.copy(towerHeadPosition.clone().add(new THREE.Vector3(10, 0, 10)));
         this.cameras[7].lookAt(towerHeadPosition)
         // console.log(towerHeadPosition)
 
@@ -261,8 +261,8 @@ export class SceneManager {
         this.ship.add(shipScene)
 
         const persecutionCamera = this.cameras[5]
-        persecutionCamera.position.set(0,8,-25)
-        persecutionCamera.lookAt(0,0,15)
+        persecutionCamera.position.set(0, 8, -25)
+        persecutionCamera.lookAt(0, 0, 15)
 
         this.ship.add(persecutionCamera)
 
@@ -287,7 +287,7 @@ export class SceneManager {
 
         addAxes(this.ship, 8)
     }
-    
+
     shootShipCannon() {
         if (this.shootCooldown > 0) {
             console.log("Aun hay cooldown")
@@ -296,7 +296,7 @@ export class SceneManager {
         console.log("Presionaste espacio")
         this.shootCooldown = SHOOT_COOLDOWN
         console.log("ahora el cooldown es", this.shootCooldown)
-        const auxBullet = new Bullet(new THREE.Vector3(0,5,0), new THREE.Vector3(-10,10,0), this.bulletModel.clone())
+        const auxBullet = new Bullet(new THREE.Vector3(0, 5, 0), new THREE.Vector3(-10, 10, 0), this.bulletModel.clone())
         this.bullets.push(auxBullet)
         this.ship.add(auxBullet.mesh) // debe ser la scene no ship
     }
@@ -312,16 +312,16 @@ export class SceneManager {
 
         this.currentShipT = (this.currentShipT + .0005) % 1;
 
-        this.shootCooldown = Math.max(0, this.shootCooldown-1)
+        this.shootCooldown = Math.max(0, this.shootCooldown - 1)
         if (this.shootCooldown >= 0)
             console.log(this.shootCooldown)
 
-        for (let i = this.bullets.length - 1; i >= 0 ; i--)  {
+        for (let i = this.bullets.length - 1; i >= 0; i--) {
             const b = this.bullets[i]
             b.update(.01)
             if (b.hasImpacted()) {
                 b.destroy()
-                this.bullets.splice(i,1)
+                this.bullets.splice(i, 1)
                 console.log("Bullet cleaned")
             }
         }
