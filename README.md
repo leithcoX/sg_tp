@@ -3,9 +3,13 @@ Pequeña simulación de una isla con un avión en una base y un barco con un ca�
 
 ## Instrucciones
 `WASD` ........... apuntar el cañón
+
 `Espacio` ........ disparar el cañón
+
 `PgUp/pgDown` .... acelerar/desacelerar el avión
+
 `Flechas` ........ maniobrar el avión
+
 `[0-9]` .......... cambio de cámara
 
 ## TODOs
