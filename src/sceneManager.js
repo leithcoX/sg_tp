@@ -290,7 +290,11 @@ export class SceneManager {
             radialSegments, heightSegments,
             false,
             0, thetaLength);
-        const campMaterial = new THREE.MeshPhongMaterial({ color: 0x656A4F })
+
+        const loader = new THREE.TextureLoader();
+        const texture = loader.load('/sg_tp/public/maps/green_metal_rust_diff_4k.jpg')
+
+        const campMaterial = new THREE.MeshPhongMaterial({ color: 0x777f70, map:texture })
         const camp = new THREE.Mesh(campGeometry, campMaterial)
         camp.position.set(3.75, .9, -2)
         camp.rotateZ(Math.PI / 2)
