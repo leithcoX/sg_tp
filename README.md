@@ -14,7 +14,7 @@ Pequeña simulación de una isla con un avión en una base y un barco con un ca�
 
 ## TODOs
 - [ ] Agregar colisones de la bala con el entorno
-- [ ] Agregar cubemap para el entorno
+- [x] Agregar cubemap para el entorno
 - [ ] Cambiar textura del barco por defecto
 - [ ] Agregar texturas para el mapa y el mar
 - [ ] Agregar texto en pantalla en vez de logear por consola

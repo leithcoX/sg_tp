@@ -143,6 +143,7 @@ export class SceneManager {
         this.vcam = vcam
         // this.vcam = cameras[6].clone()
         this.setupEnv()
+        this.loadSkyBox()
         this.setupCampBase()
         this.loadTerrain()
         this.loadShip()
@@ -207,6 +208,14 @@ export class SceneManager {
         // this.scene.add(new THREE.DirectionalLightHelper(light))
     }
 
+    loadSkyBox() {
+        const loader = new THREE.TextureLoader();
+        const texture = loader.load('/sg_tp/maps/partly_cloudy_puresky.jpg', () => {
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            this.scene.background = texture;
+        });
+    }
+
     loadTerrain() {
         this.texture = new THREE.TextureLoader().load('/sg_tp/maps/isle.png',
             (_) => {
@@ -225,7 +234,7 @@ export class SceneManager {
 
     setupTerrain() {
         const map = new THREE.Group()
-        const seaSize = 150
+        const seaSize = 1500
         const seaGeometry = new THREE.CircleGeometry(seaSize)
         const seaMaterial = new THREE.MeshPhongMaterial({ color: 0x5689FF })
         const sea = new THREE.Mesh(seaGeometry, seaMaterial)
