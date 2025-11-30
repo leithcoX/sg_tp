@@ -319,6 +319,6 @@ export class Airplane {
         v *= 0.1
         l.rotateX(v)
         r.rotateX(v)
-        console.log("logeo velocidad", v)
+        // console.log("logeo velocidad", v)
     }
 }
