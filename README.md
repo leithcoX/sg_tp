@@ -1,4 +1,4 @@
-# TP Sistemas Grficos
+# TP Sistemas Gráficos
 Pequeña simulación de una isla con un avión en una base y un barco con un cañón interactivos
 
 ## Instrucciones
