@@ -423,11 +423,11 @@ export class SceneManager {
     }
 
     rotateCannonUp() {
-        this.cannon.rotateZ(0.01 * Math.PI)
+        this.cannon.rotation.z = Math.min(this.cannon.rotation.z + 0.01 * Math.PI, -Math.PI/4)
     }
 
     rotateCannonDown() {
-        this.cannon.rotateZ(-0.01 * Math.PI)
+        this.cannon.rotation.z = Math.max(this.cannon.rotation.z - 0.01 * Math.PI, -1.75) // magic number sacado de logear rotation.z
     }
 
     rotateCannonLeft() {
