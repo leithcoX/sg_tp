@@ -367,13 +367,30 @@ export class SceneManager {
     }
 
     setupShip(shipModel) {
-        const shipScene = shipModel.scene
+        this.ship = shipModel.scene.getObjectByName("destructor")
 
-        this.turret = shipScene.children[0].children[0]
+        this.turret = this.ship.getObjectByName("torreta")
         const turret = this.turret
 
-        this.cannon = turret.children[0]
+        this.cannon = this.ship.getObjectByName("canon")
         const cannon = this.cannon
+
+        const loader = new THREE.TextureLoader();
+        const material = new THREE.MeshPhongMaterial(
+            {
+                map: loader.load("/sg_tp/public/maps/destructor/metal_plate_02_diff_4k.jpg"),
+                normalMap: loader.load("/sg_tp/public/maps/destructor/metal_plate_02_nor_4k.exr"),
+                shininess: 100,
+                // roughnessMap: loader.load("/sg_tp/public/maps/destructor/metal_plate_02_rough_4k.exr"),
+            }
+        )
+        material.specular.set(0x888888);
+        this.ship.parent.traverse( (descendant) => {
+            descendant.receiveShadow = true;
+            descendant.castShadow = true;
+            descendant.material = material;
+            console.log(descendant)
+        } ) 
 
         this.turretCamera = this.cameras[6]
         cannon.add(this.turretCamera)
@@ -385,12 +402,8 @@ export class SceneManager {
         // this.scene.add(new THREE.CameraHelper(this.turretCamera))
 
         const scalar = 0.1
-        shipScene.position.set(450, 0, 55).multiplyScalar(scalar)
-        shipScene.scale.multiplyScalar(scalar)
-        shipScene.rotation.set(0, -Math.PI / 2, 0)
-
-        this.ship = new THREE.Group
-        this.ship.add(shipScene)
+        this.ship.position.set(450, 0, 55).multiplyScalar(scalar)
+        this.ship.scale.multiplyScalar(scalar)
 
         const persecutionCamera = this.cameras[5]
         persecutionCamera.position.set(0, 8, -25)
@@ -401,13 +414,13 @@ export class SceneManager {
         this.scene.add(this.ship)
 
         this.shipPathCurve = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(-35, -3, 0),
-            new THREE.Vector3(-35, -3, -45),
-            new THREE.Vector3(-15, -3, -60),
-            new THREE.Vector3(5, -3, -55),
-            new THREE.Vector3(45, -3, -5),
-            new THREE.Vector3(25, -3, 35),
-            new THREE.Vector3(-5, -3, 35),
+            new THREE.Vector3(-35, -2.3, 0),
+            new THREE.Vector3(-35, -2.3, -45),
+            new THREE.Vector3(-15, -2.3, -60),
+            new THREE.Vector3(5, -2.3, -55),
+            new THREE.Vector3(45, -2.3, -5),
+            new THREE.Vector3(25, -2.3, 35),
+            new THREE.Vector3(-5, -2.3, 35),
         ], true)
 
 
@@ -476,6 +489,7 @@ export class SceneManager {
             const tangent = this.shipPathCurve.getTangentAt(this.currentShipT)
             this.ship.position.copy(position)
             this.ship.lookAt(tangent.add(position));
+            this.ship.rotateY(-Math.PI/2)
 
 
             // Manejo de camara orbital del barco
