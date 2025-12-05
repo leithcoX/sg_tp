@@ -475,7 +475,7 @@ export class SceneManager {
         this.airplane.updatePersecutionCamera()
         this.airplane.animateHelixes(this.airPlaneController.getStatus().speed)
 
-        this.currentShipT = (this.currentShipT + .0005) % 1;
+        this.currentShipT = (this.currentShipT + .000375) % 1;
 
         this.shootCooldown = Math.max(0, this.shootCooldown - 1)
         // if (this.shootCooldown > 0)
