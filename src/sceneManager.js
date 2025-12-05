@@ -47,7 +47,7 @@ class Explotion {
 class ExplotionManager {
     explotions = []
     modelGeometry = new THREE.SphereGeometry(1)
-    modelMaterial = new THREE.MeshPhongMaterial({ color: "0xf8f8f8" })
+    modelMaterial = new THREE.MeshPhongMaterial({ color: 0xeacfb8 })
 
     constructor(scene) {
         this.scene = scene
@@ -98,7 +98,7 @@ class Bullet {
 
 class BulletManager {
     bullets = []
-    bulletModel = new THREE.Mesh(new THREE.SphereGeometry(.15), new THREE.MeshPhongMaterial({ color: "0xf0f0f0" }))
+    bulletModel = new THREE.Mesh(new THREE.SphereGeometry(.15), new THREE.MeshPhongMaterial({ color: 0x505050 }))
     constructor(scene, explotionManager) {
         this.scene = scene
         this.explotionManager = explotionManager
@@ -381,7 +381,6 @@ export class SceneManager {
                 map: loader.load("/sg_tp/public/maps/destructor/metal_plate_02_diff_4k.jpg"),
                 normalMap: loader.load("/sg_tp/public/maps/destructor/metal_plate_02_nor_4k.exr"),
                 shininess: 100,
-                // roughnessMap: loader.load("/sg_tp/public/maps/destructor/metal_plate_02_rough_4k.exr"),
             }
         )
         material.specular.set(0x888888);
