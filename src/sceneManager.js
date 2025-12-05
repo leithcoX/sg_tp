@@ -47,7 +47,7 @@ class Explotion {
 class ExplotionManager {
     explotions = []
     modelGeometry = new THREE.SphereGeometry(1)
-    modelMaterial = new THREE.MeshPhongMaterial({ color: 0xeacfb8 })
+    modelMaterial = new THREE.MeshPhongMaterial({ color: 0xe8cfb8 })
 
     constructor(scene) {
         this.scene = scene
@@ -243,7 +243,7 @@ export class SceneManager {
         const seaNormalMap = new THREE.TextureLoader().load("/sg_tp/public/maps/sea/Water_001_NORM.jpg")
         seaNormalMap.wrapS = THREE.RepeatWrapping;
         seaNormalMap.wrapT = THREE.RepeatWrapping;
-        seaNormalMap.normalScale = new THREE.Vector2(0,4)
+        seaNormalMap.normalScale = new THREE.Vector2(0, 4)
         seaNormalMap.repeat.set(REPEAT, REPEAT)
         const seaGeometry = new THREE.CircleGeometry(seaSize)
         // const seaMaterial = new THREE.MeshPhongMaterial({ color: 0x5689FF })
@@ -305,7 +305,7 @@ export class SceneManager {
         const loader = new THREE.TextureLoader();
         const texture = loader.load('/sg_tp/public/maps/green_metal_rust_diff_4k.jpg')
 
-        const campMaterial = new THREE.MeshPhongMaterial({ color: 0x777f70, map:texture })
+        const campMaterial = new THREE.MeshPhongMaterial({ color: 0x777f70, map: texture })
         const camp = new THREE.Mesh(campGeometry, campMaterial)
         camp.position.set(3.75, .9, -2)
         camp.rotateZ(Math.PI / 2)
@@ -384,12 +384,12 @@ export class SceneManager {
             }
         )
         material.specular.set(0x888888);
-        this.ship.parent.traverse( (descendant) => {
+        this.ship.parent.traverse((descendant) => {
             descendant.receiveShadow = true;
             descendant.castShadow = true;
             descendant.material = material;
             console.log(descendant)
-        } ) 
+        })
 
         this.turretCamera = this.cameras[6]
         cannon.add(this.turretCamera)
@@ -450,7 +450,7 @@ export class SceneManager {
     }
 
     rotateCannonUp() {
-        this.cannon.rotation.z = Math.min(this.cannon.rotation.z + 0.01 * Math.PI, -Math.PI/4)
+        this.cannon.rotation.z = Math.min(this.cannon.rotation.z + 0.01 * Math.PI, -Math.PI / 4)
     }
 
     rotateCannonDown() {
@@ -488,7 +488,7 @@ export class SceneManager {
             const tangent = this.shipPathCurve.getTangentAt(this.currentShipT)
             this.ship.position.copy(position)
             this.ship.lookAt(tangent.add(position));
-            this.ship.rotateY(-Math.PI/2)
+            this.ship.rotateY(-Math.PI / 2)
 
 
             // Manejo de camara orbital del barco
