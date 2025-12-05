@@ -235,8 +235,19 @@ export class SceneManager {
     setupTerrain() {
         const map = new THREE.Group()
         const seaSize = 1500
+        const REPEAT = 70
+        const seaTexture = new THREE.TextureLoader().load("/sg_tp/public/maps/sea/Water_001_COLOR.jpg")
+        seaTexture.wrapS = THREE.RepeatWrapping;
+        seaTexture.wrapT = THREE.RepeatWrapping;
+        seaTexture.repeat.set(REPEAT, REPEAT)
+        const seaNormalMap = new THREE.TextureLoader().load("/sg_tp/public/maps/sea/Water_001_NORM.jpg")
+        seaNormalMap.wrapS = THREE.RepeatWrapping;
+        seaNormalMap.wrapT = THREE.RepeatWrapping;
+        seaNormalMap.normalScale = new THREE.Vector2(0,4)
+        seaNormalMap.repeat.set(REPEAT, REPEAT)
         const seaGeometry = new THREE.CircleGeometry(seaSize)
-        const seaMaterial = new THREE.MeshPhongMaterial({ color: 0x5689FF })
+        // const seaMaterial = new THREE.MeshPhongMaterial({ color: 0x5689FF })
+        const seaMaterial = new THREE.MeshPhongMaterial({ map: seaTexture, normalMap: seaNormalMap })
         const sea = new THREE.Mesh(seaGeometry, seaMaterial)
         sea.rotateX(-Math.PI / 2)
         sea.receiveShadow = true
