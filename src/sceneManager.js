@@ -236,11 +236,12 @@ export class SceneManager {
         const map = new THREE.Group()
         const seaSize = 1500
         const REPEAT = 70
-        const seaTexture = new THREE.TextureLoader().load("/sg_tp/public/maps/sea/Water_001_COLOR.jpg")
+        const loader = new THREE.TextureLoader()
+        const seaTexture = loader.load("/sg_tp/public/maps/sea/Water_001_COLOR.jpg")
         seaTexture.wrapS = THREE.RepeatWrapping;
         seaTexture.wrapT = THREE.RepeatWrapping;
         seaTexture.repeat.set(REPEAT, REPEAT)
-        const seaNormalMap = new THREE.TextureLoader().load("/sg_tp/public/maps/sea/Water_001_NORM.jpg")
+        const seaNormalMap = loader.load("/sg_tp/public/maps/sea/Water_001_NORM.jpg")
         seaNormalMap.wrapS = THREE.RepeatWrapping;
         seaNormalMap.wrapT = THREE.RepeatWrapping;
         seaNormalMap.normalScale = new THREE.Vector2(0, 4)
@@ -259,8 +260,16 @@ export class SceneManager {
         const widthSegments = 100;
         const heightSegments = 100;
 
+        const terrainTexture = loader.load("/sg_tp/public/maps/rocky_terrain_diff_4k.jpg")
+        terrainTexture.repeat.set(15, 15)
+        terrainTexture.wrapS = THREE.RepeatWrapping
+        terrainTexture.wrapT = THREE.RepeatWrapping
+        const terrainNormalMap = loader.load("/sg_tp/public/maps/rocky_terrain_nor_gl_4k.jpg")
+        terrainNormalMap.repeat.set(15, 15)
+        terrainNormalMap.wrapS = THREE.RepeatWrapping
+        terrainNormalMap.wrapT = THREE.RepeatWrapping
         const terrainGeometry = new ElevationGeometry(width, height, amplitude, widthSegments, heightSegments, this.texture);
-        const island = new THREE.Mesh(terrainGeometry, new THREE.MeshPhongMaterial({ color: 0x73FF77 }))
+        const island = new THREE.Mesh(terrainGeometry, new THREE.MeshPhongMaterial({ map: terrainTexture, normalMap: terrainNormalMap }))
         island.translateY(-1)
         island.rotateY(Math.PI / 2)
         island.receiveShadow = true
