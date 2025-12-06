@@ -282,9 +282,12 @@ export class SceneManager {
 
     setupCampBase() {
         const campBase = new THREE.Group()
+        const loader = new THREE.TextureLoader();
 
         const groundBase = new THREE.BoxGeometry(22, 2, 10)
-        const groundMaterial = new THREE.MeshPhongMaterial({ color: 0xC0C0C0 })
+        const groundTexture = loader.load("/sg_tp/public/maps/aerial_asphalt_01_diff_4k.jpg")
+        const groundnormalMap = loader.load("/sg_tp/public/maps/aerial_asphalt_01_nor_gl_4k.jpg")
+        const groundMaterial = new THREE.MeshPhongMaterial({ map: groundTexture, normalMap: groundnormalMap })
         const ground = new THREE.Mesh(groundBase, groundMaterial)
         campBase.add(ground)
 
@@ -311,7 +314,6 @@ export class SceneManager {
             false,
             0, thetaLength);
 
-        const loader = new THREE.TextureLoader();
         const texture = loader.load('/sg_tp/public/maps/green_metal_rust_diff_4k.jpg')
 
         const campMaterial = new THREE.MeshPhongMaterial({ color: 0x777f70, map: texture })
