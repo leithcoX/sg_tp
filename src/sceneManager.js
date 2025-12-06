@@ -492,7 +492,7 @@ export class SceneManager {
         this.airplane.updatePersecutionCamera()
         this.airplane.animateHelixes(this.airPlaneController.getStatus().speed)
 
-        this.currentShipT = (this.currentShipT + .000375) % 1;
+        this.currentShipT = (this.currentShipT + .000275) % 1;
 
         this.shootCooldown = Math.max(0, this.shootCooldown - 1)
         // if (this.shootCooldown > 0)
@@ -525,8 +525,8 @@ export class SceneManager {
         }
 
         if (this.seamapsLoaded) {
-            this.seaNormalMap.offset.add(new THREE.Vector2(0.001, 0.001))
-            this.seaTexture.offset.add(new THREE.Vector2(-0.001, -0.001))
+            this.seaNormalMap.offset.add(new THREE.Vector2(0.0003, 0.0003))
+            this.seaTexture.offset.add(new THREE.Vector2(-0.0003, -0.0003))
         }
     }
 
