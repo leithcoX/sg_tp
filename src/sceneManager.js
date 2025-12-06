@@ -135,6 +135,7 @@ export class SceneManager {
     showWireFrames = false;
     isShipLoaded = false
     shootCooldown = 0
+    seaMapsLoaded = false
     constructor(scene, cameras, vcam) {
         this.scene = scene
         this.explotionManager = new ExplotionManager(scene)
@@ -246,6 +247,11 @@ export class SceneManager {
         seaNormalMap.wrapT = THREE.RepeatWrapping;
         seaNormalMap.normalScale = new THREE.Vector2(0, 4)
         seaNormalMap.repeat.set(REPEAT, REPEAT)
+
+        this.seaTexture = seaTexture
+        this.seaNormalMap = seaNormalMap
+        this.seamapsLoaded = true
+
         const seaGeometry = new THREE.CircleGeometry(seaSize)
         // const seaMaterial = new THREE.MeshPhongMaterial({ color: 0x5689FF })
         const seaMaterial = new THREE.MeshPhongMaterial({ map: seaTexture, normalMap: seaNormalMap })
@@ -516,6 +522,11 @@ export class SceneManager {
             // upWorld.applyQuaternion(objWorldQuat);
             // this.cameras[4].up.copy(upWorld);
             this.cameras[4].lookAt(position);
+        }
+
+        if (this.seamapsLoaded) {
+            this.seaNormalMap.offset.add(new THREE.Vector2(0.001, 0.001))
+            this.seaTexture.offset.add(new THREE.Vector2(-0.001, -0.001))
         }
     }
 
