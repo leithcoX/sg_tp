@@ -238,11 +238,11 @@ export class SceneManager {
         const seaSize = 1500
         const REPEAT = 70
         const loader = new THREE.TextureLoader()
-        const seaTexture = loader.load("/sg_tp/public/maps/sea/Water_001_COLOR.jpg")
+        const seaTexture = loader.load("/sg_tp/maps/sea/Water_001_COLOR.jpg")
         seaTexture.wrapS = THREE.RepeatWrapping;
         seaTexture.wrapT = THREE.RepeatWrapping;
         seaTexture.repeat.set(REPEAT, REPEAT)
-        const seaNormalMap = loader.load("/sg_tp/public/maps/sea/Water_001_NORM.jpg")
+        const seaNormalMap = loader.load("/sg_tp/maps/sea/Water_001_NORM.jpg")
         seaNormalMap.wrapS = THREE.RepeatWrapping;
         seaNormalMap.wrapT = THREE.RepeatWrapping;
         seaNormalMap.normalScale = new THREE.Vector2(0, 4)
@@ -266,11 +266,11 @@ export class SceneManager {
         const widthSegments = 100;
         const heightSegments = 100;
 
-        const terrainTexture = loader.load("/sg_tp/public/maps/rocky_terrain_diff_4k.jpg")
+        const terrainTexture = loader.load("/sg_tp/maps/rocky_terrain_diff_4k.jpg")
         terrainTexture.repeat.set(15, 15)
         terrainTexture.wrapS = THREE.RepeatWrapping
         terrainTexture.wrapT = THREE.RepeatWrapping
-        const terrainNormalMap = loader.load("/sg_tp/public/maps/rocky_terrain_nor_gl_4k.jpg")
+        const terrainNormalMap = loader.load("/sg_tp/maps/rocky_terrain_nor_gl_4k.jpg")
         terrainNormalMap.repeat.set(15, 15)
         terrainNormalMap.wrapS = THREE.RepeatWrapping
         terrainNormalMap.wrapT = THREE.RepeatWrapping
@@ -291,8 +291,8 @@ export class SceneManager {
         const loader = new THREE.TextureLoader();
 
         const groundBase = new THREE.BoxGeometry(22, 2, 10)
-        const groundTexture = loader.load("/sg_tp/public/maps/aerial_asphalt_01_diff_4k.jpg")
-        const groundnormalMap = loader.load("/sg_tp/public/maps/aerial_asphalt_01_nor_gl_4k.jpg")
+        const groundTexture = loader.load("/sg_tp/maps/aerial_asphalt_01_diff_4k.jpg")
+        const groundnormalMap = loader.load("/sg_tp/maps/aerial_asphalt_01_nor_gl_4k.jpg")
         const groundMaterial = new THREE.MeshPhongMaterial({ map: groundTexture, normalMap: groundnormalMap })
         const ground = new THREE.Mesh(groundBase, groundMaterial)
         campBase.add(ground)
@@ -320,7 +320,7 @@ export class SceneManager {
             false,
             0, thetaLength);
 
-        const texture = loader.load('/sg_tp/public/maps/green_metal_rust_diff_4k.jpg')
+        const texture = loader.load('/sg_tp/maps/green_metal_rust_diff_4k.jpg')
 
         const campMaterial = new THREE.MeshPhongMaterial({ color: 0x777f70, map: texture })
         const camp = new THREE.Mesh(campGeometry, campMaterial)
@@ -395,8 +395,8 @@ export class SceneManager {
         const loader = new THREE.TextureLoader();
         const material = new THREE.MeshPhongMaterial(
             {
-                map: loader.load("/sg_tp/public/maps/destructor/metal_plate_02_diff_4k.jpg"),
-                normalMap: loader.load("/sg_tp/public/maps/destructor/metal_plate_02_nor_4k.exr"),
+                map: loader.load("/sg_tp/maps/destructor/metal_plate_02_diff_4k.jpg"),
+                normalMap: loader.load("/sg_tp/maps/destructor/metal_plate_02_nor_4k.exr"),
                 shininess: 100,
             }
         )
