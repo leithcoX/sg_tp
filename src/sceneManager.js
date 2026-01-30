@@ -291,14 +291,19 @@ export class SceneManager {
         const loader = new THREE.TextureLoader();
 
         const groundBase = new THREE.BoxGeometry(22, 2, 10)
-        const groundTexture = loader.load("/sg_tp/maps/aerial_asphalt_01_diff_4k.jpg")
+        const groundTexture = loader.load("/sg_tp/maps/aerial_asphalt_01_diff_4k.jpg", ()=>{}, ()=>{}, (e)=>{console.log("failed:", e)} )
         const groundnormalMap = loader.load("/sg_tp/maps/aerial_asphalt_01_nor_gl_4k.jpg")
         const groundMaterial = new THREE.MeshPhongMaterial({ map: groundTexture, normalMap: groundnormalMap })
         const ground = new THREE.Mesh(groundBase, groundMaterial)
         campBase.add(ground)
 
+        const signedGroundTexture = loader.load("/sg_tp/maps/aerial_asphalt_signal_01_diff_4k.jpg", ()=>{}, ()=>{}, (e)=>{console.log("failed:", e)} )
+        signedGroundTexture.wrapS = THREE.RepeatWrapping;
+        signedGroundTexture.wrapT = THREE.RepeatWrapping;
+        signedGroundTexture.repeat.set(6, 1)
         const airstripGeometry = new THREE.BoxGeometry(30, 2, 6)
-        const airstrip = new THREE.Mesh(airstripGeometry, groundMaterial)
+        const signedGroundMaterial = new THREE.MeshPhongMaterial({ map: signedGroundTexture, normalMap: groundnormalMap })
+        const airstrip = new THREE.Mesh(airstripGeometry, signedGroundMaterial)
         campBase.add(airstrip)
         airstrip.translateZ(8)
         airstrip.translateX(2)
