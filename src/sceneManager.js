@@ -296,17 +296,23 @@ export class SceneManager {
         const groundMaterial = new THREE.MeshPhongMaterial({ map: groundTexture, normalMap: groundnormalMap })
         const ground = new THREE.Mesh(groundBase, groundMaterial)
         campBase.add(ground)
-
-        const signedGroundTexture = loader.load("/sg_tp/maps/aerial_asphalt_signal_01_diff_4k.jpg", ()=>{}, ()=>{}, (e)=>{console.log("failed:", e)} )
-        signedGroundTexture.wrapS = THREE.RepeatWrapping;
-        signedGroundTexture.wrapT = THREE.RepeatWrapping;
-        signedGroundTexture.repeat.set(6, 1)
         const airstripGeometry = new THREE.BoxGeometry(30, 2, 6)
-        const signedGroundMaterial = new THREE.MeshPhongMaterial({ map: signedGroundTexture, normalMap: groundnormalMap })
-        const airstrip = new THREE.Mesh(airstripGeometry, signedGroundMaterial)
+        const airstrip = new THREE.Mesh(airstripGeometry, groundMaterial)
         campBase.add(airstrip)
         airstrip.translateZ(8)
         airstrip.translateX(2)
+
+        const signedGroundTexture = loader.load("/sg_tp/maps/aerial_asphalt_signal_01_diff_4k.jpg", ()=>{}, ()=>{}, (e)=>{console.log("failed:", e)} )
+        const signedGroundMaterial = new THREE.MeshPhongMaterial({ map: signedGroundTexture, normalMap: groundnormalMap })
+        signedGroundTexture.wrapS = THREE.RepeatWrapping;
+        signedGroundTexture.wrapT = THREE.RepeatWrapping;
+        signedGroundTexture.repeat.set(6, 1)
+        const signalizedAirstripPlane = new THREE.PlaneGeometry(30,6)
+        const signalizedAirstrip = new THREE.Mesh(signalizedAirstripPlane, signedGroundMaterial)
+        airstrip.add(signalizedAirstrip)
+        signalizedAirstrip.rotateX(-Math.PI/2)
+        signalizedAirstrip.translateZ(1.01)
+        addAxes(signalizedAirstrip)
 
         this.cameras[8].position.set(5, 1.3, 8)
         this.cameras[8].lookAt(-7, 2, 8)
