@@ -420,7 +420,7 @@ export class SceneManager {
         const material = new THREE.MeshPhongMaterial(
             {
                 map: loader.load("/sg_tp/maps/destructor/metal_plate_02_diff_4k.jpg"),
-                normalMap: loader.load("/sg_tp/maps/destructor/metal_plate_02_nor_4k.exr"),
+                normalMap: loader.load("/sg_tp/maps/destructor/metal_plate_02_nor_gl_4k.jpg", ()=>{console.log("loadedddd")}, ()=>{},(e)=>{console.log("error", e )}),
                 shininess: 100,
             }
         )
