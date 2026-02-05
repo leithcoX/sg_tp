@@ -140,6 +140,19 @@ export class SceneManager {
         this.scene = scene
         this.explotionManager = new ExplotionManager(scene)
         this.bulletManager = new BulletManager(scene, this.explotionManager)
+        const loadingText = document.getElementById('loading-text');
+        const loadingScreen = document.getElementById('loading-screen');
+        this.loadingManager = new THREE.LoadingManager(
+            () => {
+                loadingScreen.classList.add('fade-out');
+                setTimeout(() => loadingScreen.remove(), 500);
+            },
+            (url, loaded, total) => {
+                const percent = Math.round((loaded / total) * 100);
+                loadingText.textContent = `Cargando ${percent}%`;
+            }
+
+        )
         this.cameras = cameras
         this.vcam = vcam
         // this.vcam = cameras[6].clone()
@@ -210,7 +223,7 @@ export class SceneManager {
     }
 
     loadSkyBox() {
-        const loader = new THREE.TextureLoader();
+        const loader = new THREE.TextureLoader(this.loadingManager);
         const texture = loader.load('/sg_tp/maps/partly_cloudy_puresky.jpg', () => {
             texture.mapping = THREE.EquirectangularReflectionMapping;
             this.scene.background = texture;
@@ -218,7 +231,7 @@ export class SceneManager {
     }
 
     loadTerrain() {
-        this.texture = new THREE.TextureLoader().load('/sg_tp/maps/isle.png',
+        this.texture = new THREE.TextureLoader(this.loadingManager).load('/sg_tp/maps/isle.png',
             (_) => {
                 this.setupTerrain();
                 console.log("Isla cargada")
@@ -237,7 +250,7 @@ export class SceneManager {
         const map = new THREE.Group()
         const seaSize = 1500
         const REPEAT = 70
-        const loader = new THREE.TextureLoader()
+        const loader = new THREE.TextureLoader(this.loadingManager)
         const seaTexture = loader.load("/sg_tp/maps/sea/Water_001_COLOR.jpg")
         seaTexture.wrapS = THREE.RepeatWrapping;
         seaTexture.wrapT = THREE.RepeatWrapping;
@@ -288,10 +301,10 @@ export class SceneManager {
 
     setupCampBase() {
         const campBase = new THREE.Group()
-        const loader = new THREE.TextureLoader();
+        const loader = new THREE.TextureLoader(this.loadingManager);
 
         const groundBase = new THREE.BoxGeometry(22, 2, 10)
-        const groundTexture = loader.load("/sg_tp/maps/aerial_asphalt_01_diff_4k.jpg", ()=>{}, ()=>{}, (e)=>{console.log("failed:", e)} )
+        const groundTexture = loader.load("/sg_tp/maps/aerial_asphalt_01_diff_4k.jpg", () => { }, () => { }, (e) => { console.log("failed:", e) })
         const groundnormalMap = loader.load("/sg_tp/maps/aerial_asphalt_01_nor_gl_4k.jpg")
         const groundMaterial = new THREE.MeshPhongMaterial({ map: groundTexture, normalMap: groundnormalMap })
         const ground = new THREE.Mesh(groundBase, groundMaterial)
@@ -302,15 +315,15 @@ export class SceneManager {
         airstrip.translateZ(8)
         airstrip.translateX(2)
 
-        const signedGroundTexture = loader.load("/sg_tp/maps/aerial_asphalt_signal_01_diff_4k.jpg", ()=>{}, ()=>{}, (e)=>{console.log("failed:", e)} )
+        const signedGroundTexture = loader.load("/sg_tp/maps/aerial_asphalt_signal_01_diff_4k.jpg", () => { }, () => { }, (e) => { console.log("failed:", e) })
         const signedGroundMaterial = new THREE.MeshPhongMaterial({ map: signedGroundTexture, normalMap: groundnormalMap })
         signedGroundTexture.wrapS = THREE.RepeatWrapping;
         signedGroundTexture.wrapT = THREE.RepeatWrapping;
         signedGroundTexture.repeat.set(6, 1)
-        const signalizedAirstripPlane = new THREE.PlaneGeometry(30,6)
+        const signalizedAirstripPlane = new THREE.PlaneGeometry(30, 6)
         const signalizedAirstrip = new THREE.Mesh(signalizedAirstripPlane, signedGroundMaterial)
         airstrip.add(signalizedAirstrip)
-        signalizedAirstrip.rotateX(-Math.PI/2)
+        signalizedAirstrip.rotateX(-Math.PI / 2)
         signalizedAirstrip.translateZ(1.01)
         // addAxes(signalizedAirstrip)
 
@@ -379,7 +392,7 @@ export class SceneManager {
     }
 
     loadShip() {
-        new GLTFLoader().load('/sg_tp/models/destructor.glb',
+        new GLTFLoader(this.loadingManager).load('/sg_tp/models/destructor.glb',
             (model) => {
                 console.log("Barco Cargado")
                 this.isShipLoaded = true
@@ -403,7 +416,7 @@ export class SceneManager {
         this.cannon = this.ship.getObjectByName("canon")
         const cannon = this.cannon
 
-        const loader = new THREE.TextureLoader();
+        const loader = new THREE.TextureLoader(this.loadingManager);
         const material = new THREE.MeshPhongMaterial(
             {
                 map: loader.load("/sg_tp/maps/destructor/metal_plate_02_diff_4k.jpg"),
