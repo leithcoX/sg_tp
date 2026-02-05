@@ -312,7 +312,7 @@ export class SceneManager {
         airstrip.add(signalizedAirstrip)
         signalizedAirstrip.rotateX(-Math.PI/2)
         signalizedAirstrip.translateZ(1.01)
-        addAxes(signalizedAirstrip)
+        // addAxes(signalizedAirstrip)
 
         this.cameras[8].position.set(5, 1.3, 8)
         this.cameras[8].lookAt(-7, 2, 8)
